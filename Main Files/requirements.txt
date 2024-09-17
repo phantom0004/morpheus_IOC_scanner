@@ -1,0 +1,4 @@
+yara
+pefile
+vt
+termcolor
