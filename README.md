@@ -37,3 +37,7 @@ To use VirusTotal scanning:
 
 ### Default Scan:
 No additional setup is required for the default scan. Just run **Morpheus IOC Scanner** and choose the default scan option to analyze files with the built-in YARA rules and Pefile.
+
+---
+
+# More updates coming to the ReadMe soon . . .
