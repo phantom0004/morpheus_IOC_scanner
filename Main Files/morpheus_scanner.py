@@ -188,7 +188,11 @@ More info: https://virustotal.readme.io/docs/please-give-me-an-api-key
 
 # Enter yara scan menu (still need to implement)
 def default_yara_scan():
-    exit("Still in development . . .")
+    if not os.path.exists(os.path.join(os.getcwd(), "yara_rules", "external_yara_rules")):
+        exit("[-] Missing Yara Database, Setup.py has not been ran yet! Please run the script before running Morpheus.")
+    else:
+        print("Hang on tight! Once the rules are ready, work here will start :)")
+        exit("Still in development . . .")
 
 # Handle menu user option
 def handle_user_arguments():
