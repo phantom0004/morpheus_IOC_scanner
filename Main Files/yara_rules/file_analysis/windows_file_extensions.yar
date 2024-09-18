@@ -27,8 +27,9 @@ rule windows_script_rule
         $bat_comment = "rem " nocase
 
         // .vba files (Visual Basic for Applications)
-        $vba_variable_define = "Dim" nocase
         $vba_string_end = "End Sub" nocase
+        $vba_cell_function = "Cells(" nocase
+        $initialize_integer = "As Integer"
 
         // .ps1 files (Powershell)
         $powershell_paramater = "param(" nocase
