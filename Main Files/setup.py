@@ -23,7 +23,7 @@ def clear_screen():
     if os.name != "nt":
         os.system("clear")
     else:
-        os.ssytem("cls")
+        os.sytem("cls")
     banner()
 
 def check_requirements():
@@ -125,7 +125,8 @@ def find_and_extract_yara_files():
     # Walk through the directory tree
     for root, _, files in os.walk(base_path, topdown=False):
         for file in files:
-            if file.endswith(".yar") or file.endswith(".yara"):  # Check for .yar/.yara files
+            file_extension = os.path.splitext(file)[1]  # Extract the file extension
+            if file_extension in [".yar", ".yara"]:
                 file_path = os.path.join(root, file)  # Full file path
                 try:
                     # Move .yar file to the base directory
