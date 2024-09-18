@@ -91,12 +91,12 @@ rule identify_sensitive_key_terms
         $credit_card = /\b(?:\d[ -]*?){13,16}\b/
 
 
-        // Password patterns (common keywords used in data exfiltration, like hardcoded passwords)
-        $password_keyword_1 = "password=" nocase
-        $password_keyword_2 = "pwd=" nocase
-        $password_keyword_3 = "passwd=" nocase
-        $password_keyword_5 = "secret=" nocase
-        $password_keyword_6 = "token=" nocase
+        // Password patterns with '='(common keywords used in data exfiltration, like hardcoded passwords)
+        $password_variable_keyword_1 = "password =" nocase
+        $password_variable_keyword_2 = "pwd =" nocase
+        $password_variable_keyword_3 = "passwd =" nocase
+        $password_variable_keyword_5 = "secret =" nocase
+        $password_variable_keyword_6 = "token =" nocase
 
         // Financial Information
         $iban = /\b[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}\b/    // IBAN (International Bank Account Number)
