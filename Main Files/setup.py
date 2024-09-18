@@ -140,6 +140,10 @@ def find_and_extract_yara_files():
                 shutil.rmtree(root)
             except:
                 delete_file(root)
+    
+    # Return to main directory
+    os.chdir("..")
+    os.chdir("..")
 
 def installation_guide():
     print("Please choose your database installation guide (Default : Fortress Edition): ")
@@ -152,6 +156,44 @@ def installation_guide():
     
     print(f"[+] Choice Saved [{'NanoShield Edition' if user_choice == '1' else 'Fortress Edition'}] Loading installation menu . . .")
     return user_choice
+
+def create_update_log(links, installation_type):
+    if not os.path.exists("version_tracking"):
+        os.mkdir("version_tracking")
+        os.chdir("version_tracking")
+        create_update_text_file()
+    
+    with open("repo_versions.txt", "w") as file:
+        file.write(f"Version History Logs -> Installation Type : {installation_type} \n\n")
+        
+        for link in links:
+            update_log = run_subprocess_command(f"git ls-remote --heads {link}", True).stdout.decode("utf-8")
+            
+            if "main" in update_log or "master" in update_log:
+                update_log = update_log.splitlines()
+                
+                file.write(f"UPDATE STATUS FOR - {link} \n")
+                for line in update_log:
+                    if "main" in line.lower() or "master" in line.lower():
+                        file.write(line.strip())
+            else:
+                file.write(f"UPDATE STATUS FOR - {link} (No Master or Main Branch Found) \n")
+                file.write(update_log.strip())
+                
+            file.write("\n\n")
+    
+    print("[+] Update Log File Created -> This will be used for 'update_database.py', you may ignore this file.")
+
+def create_update_text_file():
+    with open("readme.txt", "w") as file:
+        file.write("""
+DO NOT DELETE THIS FILE
+
+This file is used to track updates across the linked GitHub repositories.
+
+WARNING: Modifying or deleting this file may cause issues.
+If this file is accidentally deleted, please run 'setup.py' again to restore it.
+                   """)
     
 # Frequently updated and well developed yara rules
 # Handpicked from a large repository : https://github.com/InQuest/awesome-yara?tab=readme-ov-file
@@ -192,5 +234,9 @@ for index, link in enumerate(rule_links):
 
 # Extract yara rules
 find_and_extract_yara_files()
+
+# Create log file for future updating
+print("\nCurrently Processing update log files for Morpheus")
+create_update_log(rule_links, 'NanoShield Edition' if choice == '1' else 'Fortress Edition')
 
 print("\n[+] Setup Complete! Yara database has been added, you may now run Morpheus.")
