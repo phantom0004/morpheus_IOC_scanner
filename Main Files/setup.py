@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 import sys
+from time import sleep
 
 def banner():
     banner = r"""
@@ -14,13 +15,21 @@ def banner():
     """
     
     print(banner)
-    print("[!] Still in development! Encountered a bug? Open an issue -> https://github.com/phantom0004/morpheus_IOC_scanner/issues")
-    print("[!] Warning: Antivirus software may flag some of these rules as potentially malicious due to the presence of elements like shellcode. This is expected behavior, and can be safely ignored. \n")
+    print("[!] Warning: Antivirus may flag some rules as malicious due to shellcode. This is expected and can be ignored.\n")
+
+def clear_screen():
+    sleep(3)
+    
+    if os.name != "nt":
+        os.system("clear")
+    else:
+        os.ssytem("cls")
+    banner()
 
 def check_requirements():
     command_output = run_subprocess_command("git clone", True)
     
-    if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "command not found"]):
+    if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
         print("[-] Missing Critical Dependancy: You dont have 'git' installed on your system. Attempt to download to fix issue? \n")
         print("1 . Attempt to download Git on machine (Requires root on Linux)\n2 . Ignore error and proceed (Not recommended, could result in crashes) \n3 . Exit Program")
         
@@ -40,9 +49,11 @@ def check_requirements():
                 sys.exit("\n[-] Error in installation. Unable to install Git, please do this manually to resolve the issue and come back to the installation.")
             else:
                 print("[+] Successfully installed Git! Proceeding with setup . . . \n")
+                clear_screen()
             
         elif user_choice == "2":
-            print("Ignoring Error, Continuing with program. \n")
+            print("Ignoring Error, Continuing with program . . . \n")
+            banner()
             return
         else:
             sys.exit("\nProgram Aborted by User.")
@@ -114,7 +125,7 @@ def find_and_extract_yara_files():
     # Walk through the directory tree
     for root, _, files in os.walk(base_path, topdown=False):
         for file in files:
-            if file.endswith(".yar"):  # Check for .yar files
+            if file.endswith(".yar") or file.endswith(".yara"):  # Check for .yar/.yara files
                 file_path = os.path.join(root, file)  # Full file path
                 try:
                     # Move .yar file to the base directory
@@ -129,13 +140,34 @@ def find_and_extract_yara_files():
             except:
                 delete_file(root)
 
-# Frequently updated and well developed yara rules
-github_rule_links = [
-    "https://github.com/Neo23x0/signature-base.git", 
-    "https://github.com/elastic/protections-artifacts",
+def installation_guide():
+    print("Please choose your database installation guide (Default : Fortress Edition): ")
+    print("1. Morpheus NanoShield -> [✔] Small, portable version. Storage-efficient. Fast [X] May miss certain malware types. Smaller coverage on unique systems.")
+    print("2. Morpheus Fortress Edition -> [✔] Supercharged with a large YARA database. Wide detection of various malware types. [X] Storage-heavy. Potentially slower speeds. \n")
+
+    user_choice = input("Choice (1 or 2) > ").strip()
+    if not user_choice:
+        user_choice = "2"
     
+    print(f"[+] Choice Saved [{'NanoShield Edition' if user_choice == '1' else 'Fortress Edition'}] Loading installation menu . . .")
+    return user_choice
+    
+# Frequently updated and well developed yara rules
+# Handpicked from a large repository : https://github.com/InQuest/awesome-yara?tab=readme-ov-file
+github_full_rule_links = [
+    "https://github.com/Neo23x0/signature-base.git", 
     "https://github.com/reversinglabs/reversinglabs-yara-rules",
-    "https://github.com/airbnb/binaryalert"
+    "https://github.com/airbnb/binaryalert",
+    # Very Large Repos
+    "https://github.com/HydraDragonAntivirus/HydraDragonAntivirus",
+    "https://github.com/malpedia/signator-rules"  
+]
+# Smaller and more concise list
+github_portable_rule_links = [
+    # Light Repos
+    "https://github.com/Neo23x0/signature-base.git", 
+    "https://github.com/reversinglabs/reversinglabs-yara-rules",
+    "https://github.com/airbnb/binaryalert",
 ]
 
 # Display friendly banner and check required dependancies
@@ -145,12 +177,17 @@ check_requirements()
 # Create main folders
 create_yara_directories()
 
-print("Please stand by . . . Downloading all required yara rules.")
+# Identify installation type
+choice = installation_guide()
+clear_screen()
 
-for index, link in enumerate(github_rule_links):
+print("Please stand by . . . Downloading all required yara rules.")
+rule_links = github_full_rule_links if choice == "2" else github_portable_rule_links
+
+for index, link in enumerate(rule_links):
     print(f"\t\nCurrently Processing the following resource: {link}")
-    run_subprocess_command(f"git clone {link}")
-    print(f"[+] Installed {index+1}/{len(github_rule_links)} dependencies")
+    run_subprocess_command(f"git clone --depth 1 --recurse-submodules {link}") # Fetch the latest version of the files
+    print(f"[+] Installed {index+1}/{len(rule_links)} dependencies")
 
 # Extract yara rules
 find_and_extract_yara_files()
