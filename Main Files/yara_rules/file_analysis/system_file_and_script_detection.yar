@@ -39,11 +39,7 @@ rule scripting_languages_detection
         $ruby_end = "end"  // Marks the end of a block or method
 
         // Common file properties - Perl
-        $perl_use = "use "  // For module imports in Perl
         $perl_strict = "use strict;"  // Perl strict mode
-
-        // Common file properties - Haskell
-        $haskell_main = "main = "  // Main function in Haskell
 
         // Common file properties - Go (Golang)
         $go_package = "package "  // Package declaration in Go
