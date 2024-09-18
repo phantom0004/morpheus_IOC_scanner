@@ -13,6 +13,24 @@
 2. **Default Scan (YARA/Pefile)**  
    Perform a static scan using YARA rules and Pefile to identify common malicious patterns. This method can quickly flag suspicious files, including the custom detection of **KRYPT0S**, a ransomware developed as a proof of concept (POC).
 
+## Installation
+
+To get started with **Morpheus IOC Scanner**, follow these steps:
+
+1. Install the required Python libraries:
+	```bash 
+	pip install -r requirements.txt  
+	```
+ 2. Set up the YARA database for Morpheus by running the setup file:
+	```python
+	python3 setup.py
+	```
+3. Once setup is complete, you can run the main file (currently still in development, but the VirusTotal API feature is functional):
+	```python
+	python3 morpheus_scanner.py
+	```
+** Note: The VirusTotal integration is fully functional, while other features are still under development. **
+
 ## Features
 
 - **Custom Detection for KRYPT0S Ransomware**:  
