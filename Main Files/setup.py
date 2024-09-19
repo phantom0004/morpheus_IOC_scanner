@@ -120,28 +120,44 @@ def create_yara_directories():
         create_and_traverse_directory("external_yara_rules")
 
 def find_and_extract_yara_files():
-    base_path = os.getcwd()  # Get the base directory
+    main_folders = os.listdir()  # Get the main folders (these won't be deleted)
     
-    # Walk through the directory tree
-    for root, _, files in os.walk(base_path, topdown=False):
-        for file in files:
-            file_extension = os.path.splitext(file)[1]  # Extract the file extension
-            if file_extension in [".yar", ".yara"]:
-                file_path = os.path.join(root, file)  # Full file path
+    # Loop through each main folder
+    for folder in main_folders:
+        for root, _, files in os.walk(folder, topdown=False):
+            for file in files:
+                file_extension = os.path.splitext(file)[1]  # Extract the file extension
+                
+                # If the file is a .yar or .yara file
+                if file_extension in [".yar", ".yara"]:
+                    file_path = os.path.join(root, file)  # Full file path
+                    try:
+                        # Move the file to the immediate parent of its current folder
+                        shutil.move(file_path, folder)  # Move it to the main folder
+                    except:
+                        pass # Ignore move
+        
+        # After extracting .yar/.yara files, remove all empty directories and non-YARA files
+        for root, dirs, files in os.walk(folder, topdown=False):
+            for file in files:
+                file_extension = os.path.splitext(file)[1]
+                # If the file is not .yar or .yara, delete it
+                if file_extension not in [".yar", ".yara"]:
+                    file_path = os.path.join(root, file)
+                    try:
+                        os.remove(file_path)
+                    except:
+                        delete_file(file_path)
+            
+            # Try to remove empty directories
+            for dir in dirs:
+                dir_path = os.path.join(root, dir)
                 try:
-                    # Move .yar file to the base directory
-                    shutil.move(file_path, base_path)
-                except FileExistsError:
-                    pass
-       
-        if root != base_path:
-            os.chdir(base_path)
-            try:
-                shutil.rmtree(root)
-            except:
-                delete_file(root)
-    
-    # Return to main directory
+                    os.rmdir(dir_path)
+                except:
+                    delete_file(dir_path)
+        
+    # Go back to main directory
     os.chdir("..")
     os.chdir("..")
 
