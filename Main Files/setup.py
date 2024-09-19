@@ -211,23 +211,29 @@ WARNING: Modifying or deleting this file may cause issues.
 If this file is accidentally deleted, please run 'setup.py' again to restore it.
                    """)
     
-# Frequently updated and well developed yara rules
 # Handpicked from a large repository : https://github.com/InQuest/awesome-yara?tab=readme-ov-file
-github_full_rule_links = [
-    "https://github.com/Neo23x0/signature-base.git", 
-    "https://github.com/reversinglabs/reversinglabs-yara-rules",
-    "https://github.com/airbnb/binaryalert",
-    # Very Large Repos
-    "https://github.com/HydraDragonAntivirus/HydraDragonAntivirus",
-    "https://github.com/malpedia/signator-rules"  
-]
-# Smaller and more concise list
-github_portable_rule_links = [
-    # Light Repos
-    "https://github.com/Neo23x0/signature-base.git", 
-    "https://github.com/reversinglabs/reversinglabs-yara-rules",
-    "https://github.com/airbnb/binaryalert",
-]
+# All links here will be reflected in the update python file
+def github_links_yara_rules():
+    rule_links = [
+        [
+            "https://github.com/Neo23x0/signature-base.git", 
+            "https://github.com/reversinglabs/reversinglabs-yara-rules",
+            "https://github.com/airbnb/binaryalert",
+            
+            # Very Large Repos
+            "https://github.com/HydraDragonAntivirus/HydraDragonAntivirus",
+            "https://github.com/malpedia/signator-rules"
+        ],
+        
+        [
+            # Light Repos
+            "https://github.com/Neo23x0/signature-base.git", 
+            "https://github.com/reversinglabs/reversinglabs-yara-rules",
+            "https://github.com/airbnb/binaryalert",
+        ]
+    ]
+    
+    return rule_links
 
 # Display friendly banner and check required dependancies
 banner()
@@ -241,7 +247,8 @@ choice = installation_guide()
 clear_screen()
 
 print("Please stand by . . . Downloading all required yara rules.")
-rule_links = github_full_rule_links if choice == "2" else github_portable_rule_links
+github_links = github_links_yara_rules()
+rule_links = github_links[0] if choice == "2" else github_links[1]
 
 for index, link in enumerate(rule_links):
     print(f"\t\nCurrently Processing the following resource: {link}")
