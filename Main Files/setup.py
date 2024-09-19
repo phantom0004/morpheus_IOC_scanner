@@ -235,31 +235,35 @@ def github_links_yara_rules():
     
     return rule_links
 
-# Display friendly banner and check required dependancies
-banner()
-check_requirements()
+def main():
+    # Display friendly banner and check required dependancies
+    banner()
+    check_requirements()
 
-# Create main folders
-create_yara_directories()
+    # Create main folders
+    create_yara_directories()
 
-# Identify installation type
-choice = installation_guide()
-clear_screen()
+    # Identify installation type
+    choice = installation_guide()
+    clear_screen()
 
-print("Please stand by . . . Downloading all required yara rules.")
-github_links = github_links_yara_rules()
-rule_links = github_links[0] if choice == "2" else github_links[1]
+    print("Please stand by . . . Downloading all required yara rules.")
+    github_links = github_links_yara_rules()
+    rule_links = github_links[0] if choice == "2" else github_links[1]
 
-for index, link in enumerate(rule_links):
-    print(f"\t\nCurrently Processing the following resource: {link}")
-    run_subprocess_command(f"git clone --depth 1 --recurse-submodules {link}") # Fetch the latest version of the files
-    print(f"[+] Installed {index+1}/{len(rule_links)} dependencies")
+    for index, link in enumerate(rule_links):
+        print(f"\t\nCurrently Processing the following resource: {link}")
+        run_subprocess_command(f"git clone --depth 1 --recurse-submodules {link}") # Fetch the latest version of the files
+        print(f"[+] Installed {index+1}/{len(rule_links)} dependencies")
 
-# Extract yara rules
-find_and_extract_yara_files()
+    # Extract yara rules
+    find_and_extract_yara_files()
 
-# Create log file for future updating
-print("\nCurrently Processing update log files for Morpheus")
-create_update_log(rule_links, 'NanoShield Edition' if choice == '1' else 'Fortress Edition')
+    # Create log file for future updating
+    print("\nCurrently Processing update log files for Morpheus")
+    create_update_log(rule_links, 'NanoShield Edition' if choice == '1' else 'Fortress Edition')
 
-print("\n[+] Setup Complete! Yara database has been added, you may now run Morpheus.")
+    print("\n[+] Setup Complete! Yara database has been added, you may now run Morpheus.")
+
+if __name__ == "__main__":
+    main()
