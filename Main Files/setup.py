@@ -173,6 +173,19 @@ def installation_guide():
     print(f"[+] Choice Saved [{'NanoShield Edition' if user_choice == '1' else 'Fortress Edition'}] Loading installation menu . . .")
     return user_choice
 
+def get_latest_commit(link):
+    update_log = run_subprocess_command(f"git ls-remote --heads {link}", True).stdout.decode("utf-8")
+            
+    if "main" in update_log or "master" in update_log:
+        update_log = update_log.splitlines()
+        
+        for line in update_log:
+            if "main" in line.lower() or "master" in line.lower():
+                return line.strip(), True
+    else:
+        # Return also False, this is a flag to indicate what the title will be
+        return update_log.strip(), False
+
 def create_update_log(links, installation_type):
     if not os.path.exists("version_tracking"):
         os.mkdir("version_tracking")
@@ -183,21 +196,16 @@ def create_update_log(links, installation_type):
         file.write(f"Version History Logs -> Installation Type : {installation_type} \n\n")
         
         for link in links:
-            update_log = run_subprocess_command(f"git ls-remote --heads {link}", True).stdout.decode("utf-8")
-            
-            if "main" in update_log or "master" in update_log:
-                update_log = update_log.splitlines()
-                
+            line, flag = get_latest_commit(link)
+            if flag is True:
                 file.write(f"UPDATE STATUS FOR - {link} \n")
-                for line in update_log:
-                    if "main" in line.lower() or "master" in line.lower():
-                        file.write(line.strip())
+                file.write(line)
             else:
                 file.write(f"UPDATE STATUS FOR - {link} (No Master or Main Branch Found) \n")
-                file.write(update_log.strip())
-                
+                file.write(line)
+            
             file.write("\n\n")
-    
+                
     print("[+] Update Log File Created -> This will be used for 'update_database.py', you may ignore this file.")
 
 def create_update_text_file():
