@@ -203,12 +203,12 @@ def create_update_log(links, installation_type):
 def create_update_text_file():
     with open("readme.txt", "w") as file:
         file.write("""
-DO NOT DELETE THIS FILE
+DO NOT DELETE THIS FILE OR THE 'version_tracking' FOLDER AND ITS CONTENTS
 
-This file is used to track updates across the linked GitHub repositories.
+The 'version_tracking' folder is crucial for the proper functioning of the 'database_updater.py' script, which updates the YARA rules in the 'yara_rules' folder.
 
-WARNING: Modifying or deleting this file may cause issues.
-If this file is accidentally deleted, please run 'setup.py' again to restore it.
+WARNING: Modifying or deleting this file or the 'version_tracking' folder may cause issues with rule updates.
+If this file or the 'version_tracking' folder is accidentally deleted, please run 'setup.py' again to restore them.
                    """)
     
 # Handpicked from a large repository : https://github.com/InQuest/awesome-yara?tab=readme-ov-file
