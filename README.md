@@ -29,6 +29,9 @@ To get started with **Morpheus IOC Scanner**, follow these steps:
 	```python
 	python3 morpheus_scanner.py
 	```
+ 
+*Periodically run '''database_updater.py''' to fetch the latest YARA rules. If any updates have been made to the repository, the script will automatically download the newest rules.*
+
 ** Note: The VirusTotal integration is fully functional, while other features are still under development. **
 
 ## Features
@@ -41,6 +44,9 @@ To get started with **Morpheus IOC Scanner**, follow these steps:
 
 - **File Information Extraction**:  
   Extract detailed file-related information through custom-made rules designed for comprehensive file analysis.
+
+- **Up to Date Yara Rules**:
+  Morpheus utilizes a custom script to instantly fetch new Yara rules whenever updates occur in the GitHub repository.
 
 - **VirusTotal Integration**:  
   Optionally integrate with VirusTotal to leverage multi-engine analysis for deeper insight into potential threats.
