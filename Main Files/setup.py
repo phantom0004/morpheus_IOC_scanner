@@ -163,8 +163,8 @@ def find_and_extract_yara_files():
 
 def installation_guide():
     print("Please choose your database installation guide (Default : Fortress Edition): ")
-    print("1. Morpheus NanoShield -> [✔] Small, portable version. Storage-efficient. Fast [X] May miss certain malware types. Smaller coverage on unique systems.")
-    print("2. Morpheus Fortress Edition -> [✔] Supercharged with a large YARA database. Wide detection of various malware types. [X] Storage-heavy. Potentially slower speeds. \n")
+    print("1. Morpheus NanoShield -> [✔] Small, portable, fast. [X] Limited malware coverage.\n")
+    print("2. Morpheus Fortress Edition -> [✔] Large YARA database for wide malware detection. [X] Storage-heavy, slower speeds.\n")
 
     user_choice = input("Choice (1 or 2) > ").strip()
     if not user_choice:
