@@ -30,7 +30,7 @@ To get started with **Morpheus IOC Scanner**, follow these steps:
 	python3 morpheus_scanner.py
 	```
  
-*Periodically run '''database_updater.py''' to fetch the latest YARA rules. If any updates have been made to the repository, the script will automatically download the newest rules.*
+*Periodically run 'database_updater.py' to fetch the latest YARA rules. If any updates have been made to the repository, the script will automatically download the newest rules.*
 
 ** Note: The VirusTotal integration is fully functional, while other features are still under development. **
 
