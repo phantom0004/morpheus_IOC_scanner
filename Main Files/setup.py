@@ -50,6 +50,8 @@ def check_requirements():
             else:
                 print("[+] Successfully installed Git! Proceeding with setup . . . \n")
                 clear_screen()
+        elif "RPC failed" in command_output:
+            sys.exit("[-] Installation failed when Cloning. This is potentially due to an unstable internet connection, the issue is temporary. Please re-run setup.py to fix this problem")
             
         elif user_choice == "2":
             print("Ignoring Error, Continuing with program . . . \n")
