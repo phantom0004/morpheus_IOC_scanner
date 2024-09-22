@@ -1,17 +1,29 @@
-rule windows_executable_extension_rule
+import "pe"
+
+rule windows_portable_executable_rule
 {
     meta:
         author = "Daryl Gatt"
-        description = "Checks if the file is a compiled windows executable."
+        description = "Checks if file is of PE format."
+        date = "2024-09-22"
+    
+    condition:
+        pe.is_pe
+}
+
+rule windows_executable_rule
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Detects other not so common executable files."
         date = "2024-09-12"
 
     strings:
-        $portable_executable = {4D 5A}  // MZ header for .exe, .com, and .scr files
         $msi = {D0 CF 11 E0 A1 B1 1A E1}  // .msi Windows Installer files use the OLE Compound Format
         $wsf = {3C 3F 78 6D 6C}  // .wsf files
     
     condition:
-        $portable_executable at 0 or $msi at 0 or $wsf at 0
+        $msi at 0 or $wsf at 0
 }
 
 rule windows_script_rule
