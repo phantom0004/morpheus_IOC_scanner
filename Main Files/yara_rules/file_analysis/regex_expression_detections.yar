@@ -124,3 +124,21 @@ rule syslog_detection
     condition:
         $syslog_log_with_id or $syslog_log_without_id
 }
+
+rule telegram_service_connectivity
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Detects connectivity with telegram, which often could indicate the usage of a C2 server."
+        credits = "https://www.slideshare.net/slideshow/cb19-leveraging-yara-rules-to-hunt-for-abused-telegram-accounts-by-asaf-aprozper/204322978"
+        reference = "github.com/3pun0x/repotele"
+        date = "2024-09-23"
+
+    strings:
+        $telegram_links = /t.me\/([\w]+)/
+        $telegram_api_string = /api\.telegram\.org\/([^/]+)/
+
+    condition:
+        any of them
+}
+
