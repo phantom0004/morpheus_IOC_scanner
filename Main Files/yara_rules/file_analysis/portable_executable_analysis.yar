@@ -1,4 +1,5 @@
 import "pe"
+import "math"
 
 rule file_is_developer_signed
 {
@@ -31,4 +32,30 @@ rule detect_32bit_architecture
         
     condition:
         pe.is_pe and (pe.machine == pe.MACHINE_I386 or pe.machine == pe.MACHINE_ARM)
+}
+
+rule has_very_high_entropy
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Checks if a file has a very high entropy, often associated with encryption, packed binaries, or steganography."
+        date = "2024-09-23"
+    
+    condition:
+        pe.is_pe and
+        for any section in pe.sections:
+            (section.name == ".text" and math.entropy(section.offset, section.size) >= 7.5)
+}
+
+rule has_low_entropy
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Checks if a file has a low entropy, structured data, often uncompressed or plain-text formats."
+        date = "2024-09-23"
+    
+    condition:
+        pe.is_pe and
+        for any section in pe.sections:
+            (section.name == ".text" and math.entropy(section.offset, section.size) < 5)
 }
