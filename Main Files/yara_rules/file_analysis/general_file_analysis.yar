@@ -61,13 +61,9 @@ rule common_web_file_strings
 
         // PHP
         $php_open_tag = "<?php" nocase
-        $php_close_tag = "?>"
 
         // CSS and Style Sheets
         $scss_mixin = "@mixin" nocase
-
-        // ASP.NET
-        $asp_open_tag = "<%" nocase
 
         // Certificates and Keys
         $crt_cert = "-----BEGIN CERTIFICATE-----" nocase
@@ -221,6 +217,56 @@ rule detect_common_log_files
         // Database Logs
         $mysql_error_log = "/var/log/mysql/error.log"
         $postgres_log = "/var/log/postgresql/postgresql.log"
+
+    condition:
+        any of them
+}
+
+rule detect_android_files
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Detects common Android application and resource files."
+        date = "2024-09-23"
+
+    strings:
+        // Android APK and DEX files
+        $apk_magic = {50 4B 03 04}  // APK (ZIP format)
+        $dex_magic = {64 65 78 0A 30 33 35 00}  // DEX (Dalvik Executable)
+
+        // Android resource files
+        $android_manifest = "AndroidManifest.xml"
+        $resources = "resources.arsc"
+        $classes = "classes.dex"
+
+        // OBB (expansion) files
+        $obb_magic = {50 4B 03 04}  // OBB files (ZIP format, used for large game/app data)
+
+    condition:
+        $apk_magic at 0 or $dex_magic at 0 or $android_manifest or $resources or $classes or $obb_magic
+}
+
+rule detect_network_files
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Detects common network configuration files."
+        date = "2024-09-23"
+
+    strings:
+        // Linux Network Configuration Files
+        $dhcp_conf = "/etc/dhcp/dhclient.conf"
+        $resolv_conf = "/etc/resolv.conf"
+        $hosts_file = "/etc/hosts"
+
+        // Windows Network Configuration Files
+        $windows_hosts = "C:\\Windows\\System32\\drivers\\etc\\hosts"
+        $windows_network_interfaces = "C:\\Windows\\System32\\drivers\\etc\\networks"
+
+        // Common Network Credentials and Logs
+        $ssh_known_hosts = "~/.ssh/known_hosts"
+        $ssh_config = "~/.ssh/config"
+        $iptables = "/etc/iptables/rules.v4"
 
     condition:
         any of them
