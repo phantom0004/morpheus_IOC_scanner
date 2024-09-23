@@ -1,9 +1,28 @@
-# Morpheus IOC Scanner 🔎 - Detect and Defend Before the Threat Begins
+# Morpheus IOC Scanner 🔎 - UNDER DEVELOPMENT
+
 ![Screenshot 2024-09-17 111304](https://github.com/user-attachments/assets/868cbf26-a411-4d1a-98ee-7003b5496d8f)
 
 **Morpheus IOC Scanner** is a tool designed to detect and analyze potentially malicious files, including ransomware and other Indicators of Compromise (IOCs). It uses custom-made rules to extract file-related information, alongside high-quality YARA rules that are widely used in enterprise environments to detect malware.
 
 **This tool is still in heavy development and is currently not ready to be used. Several updates are ongoing**
+
+## Cyber Kill Chain and Morpheus
+
+![Cyber Kill Chain](https://media.licdn.com/dms/image/C5612AQHCdEev7C56Gw/article-cover_image-shrink_720_1280/0/1520089627600?e=2147483647&v=beta&t=BTtweA-JrXypvEAoHWdhxHfk3UQvLSMJgIrPDUPoOXQ)
+
+Morpheus will detect a wide range of malware types and malicious artifacts across multiple stages of the Cyber Kill Chain—the process attackers follow during a cyberattack, from initial reconnaissance to data exfiltration. With a comprehensive YARA rule set, Morpheus is designed to identify threats at each critical phase, ensuring no malicious activity goes unnoticed.
+
+- Reconnaissance: Detecting signs of information gathering by attackers.
+- Exploitation: Identifying attempts to exploit system vulnerabilities using custom YARA rules.
+- Lateral Movement & Privilege Escalation: Spotting activities aimed at gaining higher privileges and moving across the network.
+- Obfuscation & Anti-Forensics: Catching attempts to evade detection or destroy forensic evidence.
+- Exfiltration: Monitoring for attempts to steal sensitive data.
+
+*Sophistication is in the name:*
+
+Furthermore, Morpheus is equipped with advanced APT (Advanced Persistent Threat) detection, allowing it to catch even the most sophisticated attacks in real time. If the YARA ruleset isn’t enough, Morpheus seamlessly integrates with VirusTotal, one of the world’s leading platforms for malware analysis, widely trusted by security professionals. Rest easy knowing Morpheus has you covered.
+
+Morpheus’s goal is to comprehensively address threats throughout every phase of the attack lifecycle, defend like there is no tomorrow.
 
 ## Modes of Operation
 
@@ -18,21 +37,29 @@
 To get started with **Morpheus IOC Scanner**, follow these steps:
 
 1. Install the required Python libraries:
-	```bash 
-	pip install -r requirements.txt  
-	```
+    ```bash 
+    pip install -r requirements.txt  
+    ```
  2. Set up the YARA database for Morpheus by running the setup file:
-	```python
-	python3 setup.py
-	```
+    ```python
+    python3 setup.py
+    ```
 3. Once setup is complete, you can run the main file (currently still in development, but the VirusTotal API feature is functional):
-	```python
-	python3 morpheus_scanner.py
-	```
- 
-*Periodically run 'database_updater.py' to fetch the latest YARA rules. If any updates have been made to the repository, the script will automatically download the newest rules.*
+    ```python
+    python3 morpheus_scanner.py
+    ```
 
-** Note: The VirusTotal integration is fully functional, while other features are still under development. **
+## Updating the YARA Database
+
+Periodically run the `database_updater.py` script to fetch the latest YARA rules and ensure your database is up-to-date with the latest versions from the GitHub repositories.
+
+```bash
+python3 database_updater.py
+```
+
+If you wish to switch to a more comprehensive or lighter YARA ruleset, such as the Fortress Edition or Nano Edition, simply run the `setup.py` script again. This will handle the deletion of old files and automatically set up the new ruleset for you.
+
+Running the setup script will seamlessly update the database and ensure you are using the desired edition of Morpheus.
 
 ## Features
 
