@@ -107,5 +107,5 @@ rule commmon_zip_extensions
         $cab = {4D 53 43 46}  // CAB (Windows Cabinet)
 
     condition:
-        $arc at 0 or $arj at 0 or $gzip at 0 or $rar at 0 or $sit at 0 or $zip at 0
+        $arc at 0 or $arj at 0 or $gzip at 0 or $rar at 0 or $sit at 0 or $zip at 0 or $bz2 at 0 or $seven_zip at 0 or $xz at 0 or $cab at 0
 }
