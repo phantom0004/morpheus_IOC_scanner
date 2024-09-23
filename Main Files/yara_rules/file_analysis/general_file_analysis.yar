@@ -41,7 +41,7 @@ rule video_extension_rule
         $mp4 at 0 or $mov at 0 or $avi at 0 or $wmv at 0 or $flv at 0 or $mkv at 0 or $webm at 0 or $mpeg2 at 0 or $3gp at 0
 }
 
-rule common_web_file_extensions
+rule common_web_file_strings
 {
     meta:
         author = "Daryl Gatt"
@@ -146,6 +146,81 @@ rule simple_scripting_languages_detection
         $go_package = "package "  // Package declaration in Go
         $go_import = "import ("  // Import multiple packages in Go
         $go_main = "func main()"  // Main function in Go
+
+    condition:
+        any of them
+}
+
+rule detect_database_files
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Detects various database-related files and configurations from multiple database systems."
+        date = "2024-09-23"
+
+    strings:
+        // MySQL Database Files
+        $mysql_ibd = "ibdata1"  // InnoDB storage file
+        $mysql_frm = ".frm"  // Table definition file
+        $mysql_myd = ".MYD"  // MySQL database data file
+        $mysql_myi = ".MYI"  // MySQL index file
+        $db_backup = ".sql"  // Generic SQL backup
+
+        // SQLite Database Files
+        $sqlite_db = ".sqlite"  // SQLite database
+        $sqlite_db3 = ".db3"  // SQLite DB3 file
+        $sqlite_wal = ".sqlite-wal"  // SQLite Write-Ahead Log
+        $sqlite_shm = ".sqlite-shm"  // Shared memory file
+
+        // PostgreSQL Database Files
+        $postgresql_conf = "/var/lib/postgresql/data/postgresql.conf"  // PostgreSQL configuration
+        $pg_hba_conf = "/etc/postgresql/pg_hba.conf"  // Client authentication configuration
+
+        // Microsoft SQL Server Files
+        $mssql_mdf = ".mdf"  // Primary database file
+        $mssql_ldf = ".ldf"  // Log file
+        $mssql_ndf = ".ndf"  // Secondary database file
+
+        // Oracle Database Files
+        $oracle_dmp = ".dmp"  // Oracle dump file
+        $oracle_log = ".log"  // Oracle redo log file
+        $oracle_ora = ".ora"  // Oracle parameter file (tnsnames.ora)
+
+        // FileMaker Pro Database Files
+        $filemaker_fmp12 = ".fmp12"  // FileMaker Pro 12+ file
+        $filemaker_fp7 = ".fp7"  // FileMaker Pro 7 file
+
+        // Microsoft Access Database Files
+        $access_mdb = ".mdb"  // Access database file
+        $access_accdb = ".accdb"  // Access 2007+ database file
+
+    condition:
+        any of them
+}
+
+rule detect_common_log_files
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Detects commonly used log files across various systems and applications."
+        date = "2024-09-23"
+
+    strings:
+        // System Logs
+        $syslog = "/var/log/syslog"
+        $auth_log = "/var/log/auth.log"
+        $messages_log = "/var/log/messages"
+
+        // Web Server Logs
+        $apache_access_log = "/var/log/apache2/access.log"
+        $nginx_access_log = "/var/log/nginx/access.log"
+
+        // Windows Logs
+        $windows_event_log = "C:\\Windows\\System32\\winevt\\Logs\\*.evtx"
+
+        // Database Logs
+        $mysql_error_log = "/var/log/mysql/error.log"
+        $postgres_log = "/var/log/postgresql/postgresql.log"
 
     condition:
         any of them
