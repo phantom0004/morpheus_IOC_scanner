@@ -71,7 +71,7 @@ rule file_paths
         date = "2024-09-16"
 
     strings:
-        $windows_file_path = /[A-Za-z]:\\(?:[^\\\?\/\*\"\<\>\|]+\\)*[^\\\?\/\*\"\<\>\|]+/ // Detect Windows file paths
+        $windows_file_path = /[A-Za-z]:\\[A-Za-z0-9_\\\- ]+\\[A-Za-z0-9_\\\- ]+\.[A-Za-z0-9]+/ // Detect Windows file paths
         $unix_file_path = /\/[A-Za-z0-9._-]+(\/[A-Za-z0-9._-]+)*/ // Detect Unix/Linux file paths
 
     condition:
