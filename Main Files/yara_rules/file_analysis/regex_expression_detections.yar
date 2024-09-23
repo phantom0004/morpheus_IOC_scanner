@@ -135,8 +135,8 @@ rule telegram_service_connectivity
         date = "2024-09-23"
 
     strings:
-        $telegram_links = /t.me\/([\w]+)/
-        $telegram_api_string = /api\.telegram\.org\/([^/]+)/
+        $telegram_links = /t\.me\/([\w]+)/
+        $telegram_api_string = /api\.telegram\.org\/([^\/]+)/
 
     condition:
         any of them
