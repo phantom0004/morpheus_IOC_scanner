@@ -88,7 +88,7 @@ rule identify_sensitive_key_terms
 
     strings:
         // Credit Card Number (Visa, MasterCard, etc.) - 13 to 16 digits
-        $credit_card = /\b(?:\d[ -]*?){13,16}\b/
+        $credit_card = /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{1,4}\b/
 
 
         // Password patterns with '='(common keywords used in data exfiltration, like hardcoded passwords)
