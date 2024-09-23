@@ -109,3 +109,18 @@ rule identify_sensitive_key_terms
     condition:
         any of them
 }
+
+rule syslog_detection
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Detects common syslog patterns with and without an ID."
+        date = "2024-09-23"
+
+    strings:
+        $syslog_log_with_id = /<\d{1,3}>[A-Za-z]{3} \d{1,2} \d{2}:\d{2}:\d{2} [A-Za-z0-9_-]+ [A-Za-z0-9_-]+\[\d{1,5}\]: .+/
+        $syslog_log_without_id = /[A-Za-z]{3} \d{1,2} \d{2}:\d{2}:\d{2} [A-Za-z0-9_-]+ [A-Za-z0-9_-]+\[\d{1,5}\]: .+/
+
+    condition:
+        $syslog_log_with_id or $syslog_log_without_id
+}
