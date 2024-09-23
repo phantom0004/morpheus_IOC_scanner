@@ -142,3 +142,23 @@ rule telegram_service_connectivity
         any of them
 }
 
+rule discord_service_connectivity
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Detects Discord-related URLs."
+        date = "2024-09-23"
+
+    strings:
+        // Discord Invite Links
+        $discord_invite = /https:\/\/discord\.gg\/[A-Za-z0-9]{7,}/
+
+        // Discord Channels
+        $discord_channels = /https:\/\/discord\.com\/channels\//
+
+        // Discord API 
+        $discord_api = /https:\/\/discord\.com\/api\//
+
+    condition:
+        any of them
+}
