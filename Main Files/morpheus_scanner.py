@@ -4,7 +4,7 @@ try:
     from modules import pe_analysis
     from modules import virus_total
     from modules import yara_analysis
-except ModuleNotFoundError:
+except ModuleNotFoundError as err:
     exit("Custom modules not found. Please ensure you have the 'yara_rules.py', 'pe_analysis.py' and 'virus_total.py'!")
 try:
     from termcolor import colored
@@ -135,7 +135,7 @@ def virus_total_user_arguments():
     else:
         exit("[-] Invalid Input! Please enter a value between 1 and 2")
 
-    print(f"{"-"*100}\n")
+    print(f"{'-'*100}\n")
     user_choice = "files" if user_choice == "1" else "urls"
     
     return data, user_choice
