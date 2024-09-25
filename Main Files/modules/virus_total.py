@@ -144,9 +144,9 @@ class VirusTotalAPI:
         if malicious_count < 30:
             print(f"[+] Final Verdict : {colored('Deemed Safe', 'green')} (Marked Malicious by less than 30% of vendors)")
         elif malicious_count in range(30,80):
-            print(f"[+] Final Verdict : {colored('Deemed Possibly Malicious', "yellow")} (Marked Malicious by 30% to 70% of vendors)")
+            print(f"[+] Final Verdict : {colored('Deemed Possibly Malicious', 'yellow')} (Marked Malicious by 30% to 70% of vendors)")
         else:
-            print(f"[+] Final Verdict : ({colored('Deemed Likely Malicious', "red")} (Marked Malicious by over 80% of vendors)")
+            print(f"[+] Final Verdict : ({colored('Deemed Likely Malicious', 'red')} (Marked Malicious by over 80% of vendors)")
 
     @staticmethod
     def classify_threat(threat_output):
@@ -168,7 +168,7 @@ class VirusTotalAPI:
                     categories.add(item.get("value", "Unknown"))
 
         print(f"[+] Categories       : {colored(', '.join(categories), attrs=['bold'])}")
-        print(f"[+] Labels           : {colored(', '.join(labels).replace("/", ", "), attrs=['bold'])}")
+        print(f"[+] Labels           : {colored(', '.join(labels).replace('/', '', ''), attrs=['bold'])}")
         print(f"[+] Threat Names     : {colored(', '.join(threat_names), attrs=['bold'])}")
     
     @staticmethod        
@@ -227,8 +227,8 @@ class VirusTotalAPI:
             print(f"[+] Times URL Got Scanned : {output.times_submitted}")
             
             print("\nTotal Community Votes:")
-            print(f"[+] Malicious Rating  : Score of {output.total_votes.get('malicious', "None Found")}")
-            print(f"[+] Harmless  Rating  : Score of {output.total_votes.get('harmless', "None Found")}")
+            print(f"[+] Malicious Rating  : Score of {output.total_votes.get('malicious', 'None Found')}")
+            print(f"[+] Harmless  Rating  : Score of {output.total_votes.get('harmless', 'None Found')}")
 
         print(f"\n{choice.capitalize()} Community Repudation: ")
         score = self.score_verdict(output.reputation)
@@ -294,7 +294,7 @@ class VirusTotalAPI:
             # Data Extracted
             comments = comments.replace("[/b]", "").replace("[b]", "")
             
-            print(f"{colored(f'\t> Comment {comment_number} :', attrs=['bold'])}")
+            print("\t",colored(f'> Comment {comment_number} :', attrs=['bold']))
             print("\n".join([f"\t{line}" for line in comments.splitlines()]))
             print() # Add spacing
             
