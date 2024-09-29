@@ -27,7 +27,7 @@ except Exception:
 
 # Parent class which handles the core of this file
 class BaseDetection:
-    def __init__(self, database_rules:str, file_analysis_rules:str, database_choice:str, file_to_scan:str, scan_type:str="file_analysis_scan") -> None:
+    def __init__(self, file_to_scan:str, scan_type:str="file_analysis") -> None:
         # Pre-Defined Values - Yara Paths
         self.yara_database_path = os.path.join("..", "yara_rules", "external_yara_rules")
         self.file_analysis_path = os.path.join("..", "yara_rules", "file_analysis")
@@ -39,6 +39,7 @@ class BaseDetection:
     # The first step in scanning - Will compile all the Yara rules            
     def compile_yara_rules(self) -> Union[yara.Rules, str]:
         try:
+            # File analysis simply does a general scan to the file, the malware scan uses the external yara database
             rules = yara.compile(filepath = self.yara_database_path if self.scan_type == "malware_scan" else self.file_analysis_path)
             return rules
         except Exception as err:
