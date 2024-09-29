@@ -29,8 +29,8 @@ except Exception:
 class BaseDetection:
     def __init__(self, file_to_scan:str, scan_type:str="file_analysis") -> None:
         # Pre-Defined Values - Yara Paths
-        self.yara_database_path = os.path.join("..", "yara_rules", "external_yara_rules")
-        self.file_analysis_path = os.path.join("..", "yara_rules", "file_analysis")
+        self.yara_database_path = os.path.abspath(os.path.join("yara_rules", "external_yara_rules"))
+        self.file_analysis_path = os.path.abspath(os.path.join("yara_rules", "file_analysis"))
         
         # User Defined Value - Program Setup
         self.scan_type = scan_type
@@ -43,10 +43,10 @@ class BaseDetection:
             rules = yara.compile(filepath = self.yara_database_path if self.scan_type == "malware_scan" else self.file_analysis_path)
             return rules
         except Exception as err:
-            return f"Error : {err}"
+            return f"Compile Error : {err}"
     
     # The second step in scanning - Will assess the Yara rules for that file
-    def load_rules(self, yara_object:yara.Rules) -> Union[List[yara.Match], str]:
+    def load_rules(self, yara_object:yara.Rules) -> Union[List[yara.Match], str]:        
         try:
             matches = yara_object.match(self.file_to_scan, timeout=60)
             return matches  
@@ -55,7 +55,7 @@ class BaseDetection:
             print("[!] Timeout Encountered, Skipping . . .")
             return
         except Exception as err:
-            return f"Error : {err}"
+            return f"Loading Error : {err}"
     
     @staticmethod
     def generate_output_report(scan_output:yara.Match):
