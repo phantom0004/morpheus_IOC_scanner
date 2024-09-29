@@ -21,6 +21,11 @@ class ExecutableAnalysis:
     def detect_nopslides(self) -> None:
         pass
     
-    @staticmethod
-    def extract_sections(section_name:str) -> list:
+    def extract_sections(self, section_name:str) -> list:
+        pass
+    
+    def detect_architecture(self) -> None:
+        pass
+    
+    def detect_entropy(self) -> None:
         pass
