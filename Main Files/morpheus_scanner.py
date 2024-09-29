@@ -143,15 +143,11 @@ def virus_total_user_arguments():
 # Hash file for virus total scan
 def hash_file(path, hash_algo="sha256"):
     virus_total_object = virus_total.VirusTotalAPI()
-    
-    if not os.path.exists(path):
-        return None
+
     if hash_algo not in ["md5", "sha256", "sha1"]:
         hash_algo = "sha256"
     
-    file_data = r""
-    with open(path, "rb") as file:
-        file_data = file.read()
+    file_data = load_file(path)
     
     return virus_total_object.hash_file(file_data, hash_algo)
 
@@ -186,13 +182,41 @@ More info: https://virustotal.readme.io/docs/please-give-me-an-api-key
 3. API Overview: https://virustotal.readme.io/docs
     """)
 
-# Enter yara scan menu (still need to implement)
+def load_file(user_path):
+    if not os.path.exists(user_path.strip()):
+        exit(colored("[-] The file defined does not exist! Please ensure the path is correct. Aborting.", "red"))
+    
+    file_contents = b""    
+    with open(user_path, "rb") as file:
+        file_contents = file.read()
+    
+    return file_contents
+
+# Yara scan
 def default_yara_scan():
     if not os.path.exists(os.path.join(os.getcwd(), "yara_rules", "external_yara_rules")):
         exit("[-] Missing Yara Database, Setup.py has not been ran yet! Please run the script before running Morpheus.")
-    else:
-        print("Hang on tight! Once the rules are ready, work here will start :)")
-        exit("Still in development . . .")
+    
+    # Handle file data
+    file_path = input("Enter the path of the file to scan > ")
+    
+    # Populate general file and choice information before scan
+    for scan_type in ["file_analysis", "malware_scan"]:
+        # Setup of BaseDetection Class
+        yara_base_instance = yara_analysis.BaseDetection(file_path, scan_type)
+        
+        # Rule setup
+        yara_rule_object = yara_base_instance.compile_yara_rules()
+        
+        # Rule compilation and Match Finding
+        yara_matches = yara_base_instance.load_rules(yara_rule_object)
+        
+        if yara_matches:
+            print(yara_matches)
+        else:
+            print(f"No Values Have Been Returned - {scan_type}")
+        
+        print("\n")
 
 # Handle menu user option
 def handle_user_arguments():
