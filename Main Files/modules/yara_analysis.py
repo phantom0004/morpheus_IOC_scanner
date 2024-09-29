@@ -16,14 +16,14 @@ import os
 from typing import Union, List
 try:
     import yara
-except:
-    # Shows a guide on how to fix this class issue, since Yara can be problematic at times
+except Exception:
+    # Shows a guide on how to fix this class issue, since Yara can be problematic at times ...
     print("[-] Unable to load Yara Module! Below are the follow steps to troubleshoot :")
-    print("1. Ensure 'Yara' is installed using pip -> 'pip install yara'")
+    print("1. Ensure 'yara' and 'python-yara' is installed using the 'requirements.txt' file.")
     print("2. 'libyara.so' Not found when using yara? Follow these steps on Linux:")
-    print("     - sudo sh -c 'echo '/usr/local/lib' >> /etc/ld.so.conf")
+    print("     - sudo echo '/usr/local/lib' >> /etc/ld.so.conf")
     print("     - sudo ldconfig")
-    exit("If all fails, Please install the latest Yara source code here : https://github.com/VirusTotal/yara/archive/refs/tags/v4.3.2.tar.gz and then re-run the script.")
+    exit("If all fails, Please view this discussion : https://stackoverflow.com/questions/41255478/issue-oserror-usr-lib-libyara-so-cannot-open-shared-object-file-no-such-fi.")
 
 # Parent class which handles the core of this file
 class BaseDetection:
