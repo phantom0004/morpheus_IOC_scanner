@@ -4,7 +4,7 @@ try:
     from modules import pe_analysis
     from modules import virus_total
     from modules import yara_analysis
-except ModuleNotFoundError as err:
+except ModuleNotFoundError:
     exit("Custom modules not found. Please ensure you have the 'yara_rules.py', 'pe_analysis.py' and 'virus_total.py'!")
 try:
     from termcolor import colored
