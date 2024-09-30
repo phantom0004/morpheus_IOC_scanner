@@ -1,15 +1,16 @@
 import time
 import os
+
+try:
+    from termcolor import colored
+except ModuleNotFoundError:
+    exit("Missing Dependancies! Please ensure you download all dependancies from the 'requirements.txt' file")
 try:
     from modules import pe_analysis
     from modules import virus_total
     from modules import yara_analysis
 except ModuleNotFoundError:
     exit("Custom modules not found. Please ensure you have the 'yara_rules.py', 'pe_analysis.py' and 'virus_total.py'!")
-try:
-    from termcolor import colored
-except ModuleNotFoundError:
-    exit("Missing Dependancies! Please ensure you download all dependancies from the 'requirements.txt' file")
 
 # Program Intro Banner
 def intro_banner():
@@ -39,7 +40,7 @@ def intro_banner():
                ` :`.     .': '                                                 
                 `:  `---'  :'
                 
-   Detect and Defend Before the Threat Begins
+  Detect and Defend Before the Threat Begins
     """, "red", attrs=["bold"])
         
     options = """
@@ -195,28 +196,41 @@ def load_file(user_path):
 # Yara scan
 def default_yara_scan():
     if not os.path.exists(os.path.join(os.getcwd(), "yara_rules", "external_yara_rules")):
-        exit("[-] Missing Yara Database, Setup.py has not been ran yet! Please run the script before running Morpheus.")
+        exit(colored("[-] Missing Yara Database, Setup.py has not been ran yet! Please run the script before running Morpheus.", "red"))
     
     # Handle file data
-    file_path = input("Enter the path of the file to scan > ")
+    file_path = input("Enter the path of the file to scan > ").strip()
+    if not os.path.exists(file_path):
+        exit(colored("[-] The file defined does not exist! Please ensure the path is correct. Aborting.", "red"))
     
-    print()
+    # Styling
+    print("_"*int(37+len(file_path)))
+    print("\n")
     
     # Populate general file and choice information before scan
-    for scan_type in ["file_analysis", "malware_scan"]:
+    for scan_type in ["file_analysis", "malware_scan"]:        
         # Setup of BaseDetection Class
         yara_base_instance = yara_analysis.BaseDetection(file_path, scan_type)
-        
         # Rule setup
         yara_rule_object = yara_base_instance.compile_yara_rules(yara_base_instance)
         
         # Rule compilation and Match Finding
         yara_matches = yara_base_instance.load_rules(yara_rule_object)
         
+        # Setup Other Classes that will handle the output
+        general_file_scan_obj = yara_analysis.GeneralFileScan()
+        malware_scan_obj = yara_analysis.MalwareScan()
+        
         if yara_matches:
-            print(f"Matched with {len(yara_matches)} rules.")
+            # Generate output based on scan type
+            if scan_type == "file_analysis":
+                general_file_scan_obj.generate_terminal_output(yara_matches)
+            else:
+                malware_scan_obj.generate_terminal_output(yara_matches)
         else:
-            print(f"No Values Have Been Returned - {scan_type}")
+            print(f"No Values Have Been Returned. The {scan_type} scan type did not yield any matching yara results.")
+        
+        print("\n")
 
 # Handle menu user option
 def handle_user_arguments():
