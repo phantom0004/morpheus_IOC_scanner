@@ -36,11 +36,30 @@ class BaseDetection:
         self.scan_type = scan_type
         self.file_to_scan = file_to_scan
     
-    # The first step in scanning - Will compile all the Yara rules            
-    def compile_yara_rules(self) -> Union[yara.Rules, str]:
+    # List all files present inside a set for further usage
+    def list_yara_files(self) -> Union[set, str]:
+        files = set()
+        folder_path = self.yara_database_path if self.scan_type == "malware_scan" else self.file_analysis_path
+        
         try:
-            # File analysis simply does a general scan to the file, the malware scan uses the external yara database
-            rules = yara.compile(filepath = self.yara_database_path if self.scan_type == "malware_scan" else self.file_analysis_path)
+            for yara_file in os.listdir(folder_path):
+                files.add(os.path.join(folder_path, yara_file))
+        except (PermissionError, OSError):
+            pass # Skip as these may be minor I/O errors
+        except Exception as err:
+            return f"Directory Error : {err}"
+            
+        return files
+    
+    # The first step in scanning - Will compile all the Yara rules
+    @staticmethod            
+    def compile_yara_rules(instance: 'BaseDetection') -> Union[yara.Rules, str]:
+        file_paths = instance.list_yara_files() # Get all current yara rules of scan type
+        
+        # File analysis simply does a general scan to the file, the malware scan uses the external yara database
+        try:
+            # Compile all paths in a dictionary to compile simultaneously
+            rules = yara.compile(filepaths={str(index): path for index, path in enumerate(file_paths)})
             return rules
         except Exception as err:
             return f"Compile Error : {err}"
