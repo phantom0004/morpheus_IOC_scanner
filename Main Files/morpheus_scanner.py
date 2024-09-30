@@ -15,7 +15,7 @@ except ModuleNotFoundError:
 def intro_banner():
     banner = colored("""
            Into the Morpheous Domain
-             Embrace the Unknown
+              Embrace the Unknown
                      
    .:'                                  `:.                                    
   ::'                                    `::                                   
@@ -58,21 +58,21 @@ Please choose an option:
 
 # Banner when scanning
 def scan_banner():
-    banner = r"""
-                         `-._                           
-                             `:.`---.__         `-._                       
-                               `:.     `--.         `.                     
-                                 \.        `.         `.                   
-                         (,,(,    \.         `.   ____,-`.,                
-                      (,'     `/   \.   ,--.___`.'                         
-                      ,  ,'  ,--.  `,   \.;'         `                         
-                   `{D, {    \  :    \;                                    
-                     V,,'    /  /    //                                    
-                     j;;    /  ,' ,-//.    ,---.      ,                    
-                     \;'   /  ,' /  _  \  /  _  \   ,'/                    
-                           \   `'  / \  `'  / \  `.' /                     
-                            `.___,'   `.__,'   `.__,'  
-    """
+    banner = colored(r"""
+   (  )   /\   _                 (     
+    \ |  (  \ ( \.(               )                      _____
+  \  \ \  `  `   ) \             (  ___                 / _   \
+ (_`    \+   . x  ( .\            \/   \____-----------/ (o)   \_
+- .-               \+  ;          (  O                           \____
+Feel the blaze of Morpheus        \_____________  `              \  /
+(__                +- .( -'.- <. - _  VVVVVVV VV V\                 \/
+(_____            ._._: <_ - <- _  (--  _AAAAAAA__A_/                  |
+  .    /./.+-  . .- /  +--  - .     \______________//_              \_______
+  (__ ' /x  / x _/ (                                  \___'          \     /
+ , x / ( '  . / .  /                                      |           \   /
+    /  /  _/ /    +                                      /              \/
+   '  (__/                                             /                  \
+    """, "red", attrs=["bold"])
     
     print(banner+"\n")
 
@@ -200,23 +200,23 @@ def default_yara_scan():
     # Handle file data
     file_path = input("Enter the path of the file to scan > ")
     
+    print()
+    
     # Populate general file and choice information before scan
     for scan_type in ["file_analysis", "malware_scan"]:
         # Setup of BaseDetection Class
         yara_base_instance = yara_analysis.BaseDetection(file_path, scan_type)
         
         # Rule setup
-        yara_rule_object = yara_base_instance.compile_yara_rules()
+        yara_rule_object = yara_base_instance.compile_yara_rules(yara_base_instance)
         
         # Rule compilation and Match Finding
         yara_matches = yara_base_instance.load_rules(yara_rule_object)
         
         if yara_matches:
-            print(yara_matches)
+            print(f"Matched with {len(yara_matches)} rules.")
         else:
             print(f"No Values Have Been Returned - {scan_type}")
-        
-        print("\n")
 
 # Handle menu user option
 def handle_user_arguments():
