@@ -14,9 +14,10 @@ and will support different scan types, including malware and general file analys
 
 import os
 from typing import Union, List
+from termcolor import colored
 try:
     import yara
-except Exception:
+except:
     # Shows a guide on how to fix this class issue, since Yara can be problematic at times ...
     print("[-] Unable to load Yara Module! Below are the follow steps to troubleshoot :")
     print("1. Ensure 'yara' and 'python-yara' is installed using the 'requirements.txt' file.")
@@ -75,24 +76,40 @@ class BaseDetection:
             return
         except Exception as err:
             return f"Loading Error : {err}"
-    
-    @staticmethod
-    def generate_output_report(scan_output:yara.Match):
-        # Will incorperate several types of formatting, such as JSON and possibly PDF
-        pass
 
 # Most extensive scan, scans for malware and IOC's based on the Yara database
-class MalwareScan(BaseDetection):
-    def __init__(self) -> None:
-        super().__init__()
+class MalwareScan():
+    @staticmethod
+    def generate_terminal_output(yara_matches:list) -> None:
+        print(colored("========= MALWARE ANALYSIS OUTPUT =========", attrs=["bold"]))
+        if not yara_matches or not isinstance(yara_matches, list):
+            print(colored("[-] No rules matched this file", "yellow"))
+        else:
+            for match in yara_matches:
+                if match and match.strings:
+                    print(colored(f"[+] FOUND MATCH FROM: '{match}'", "green"))
+                    
+                    print("Found Strings :")
+                    for yara_string in match.strings:
+                        print(f"\t> {yara_string}")
     
-    def generate_output(self) -> None:
+    # Output will be processed in a document such as a PDF
+    @staticmethod
+    def generate_document_report(scan_output:yara.Match) -> None:
         pass
 
 # Least intensive scan, the first scan of Morpheus which scans for file information
-class GeneralFileScan(BaseDetection):
-    def __init__(self) -> None:
-        super().__init__()
-    
-    def generate_output(self) -> None:
-        pass
+class GeneralFileScan():
+    @staticmethod
+    def generate_terminal_output(yara_matches:list) -> None:
+        print(colored("========= FILE ANALYSIS OUTPUT =========", attrs=["bold"]))
+        if not yara_matches or not isinstance(yara_matches, list):
+            print(colored("[-] No rules matched this file", "yellow"))
+        else:
+            for match in yara_matches:
+                if match and match.strings:
+                    print(colored(f"[+] FOUND MATCH FROM: '{match}'", "green"))
+                    
+                    print("Found Strings :")
+                    for yara_string in match.strings:
+                        print(f"\t> {yara_string}")
