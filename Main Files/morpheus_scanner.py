@@ -134,7 +134,7 @@ def virus_total_user_arguments():
     elif user_choice == "2":
         data = input("\nEnter the URL you wish to scan > ").strip()
     else:
-        exit("[-] Invalid Input! Please enter a value between 1 and 2")
+        exit(colored("[-] Invalid Input! Please enter a value between 1 and 2", "red"))
 
     print(f"{'-'*100}\n")
     user_choice = "files" if user_choice == "1" else "urls"
@@ -208,27 +208,21 @@ def default_yara_scan():
     print("\n")
     
     # Populate general file and choice information before scan
-    for scan_type in ["file_analysis", "malware_scan"]:        
+    for scan_type in ["file_analysis", "malware_scan"]:                
         # Setup of BaseDetection Class
         yara_base_instance = yara_analysis.BaseDetection(file_path, scan_type)
-        # Rule setup
-        yara_rule_object = yara_base_instance.compile_yara_rules(yara_base_instance)
-        
-        # Rule compilation and Match Finding
-        yara_matches = yara_base_instance.load_rules(yara_rule_object)
+        # Rule setup and Match Finder
+        yara_matches = yara_base_instance.parse_yara_rules(yara_base_instance)
         
         # Setup Other Classes that will handle the output
-        general_file_scan_obj = yara_analysis.GeneralFileScan()
-        malware_scan_obj = yara_analysis.MalwareScan()
+        general_file_scan_obj = yara_analysis.GeneralFileScan(yara_matches)
+        malware_scan_obj = yara_analysis.MalwareScan(yara_matches)
         
-        if yara_matches:
-            # Generate output based on scan type
-            if scan_type == "file_analysis":
-                general_file_scan_obj.generate_terminal_output(yara_matches)
-            else:
-                malware_scan_obj.generate_terminal_output(yara_matches)
+        # Generate output based on scan type
+        if scan_type == "file_analysis":
+            general_file_scan_obj.generate_terminal_output()
         else:
-            print(f"No Values Have Been Returned. The {scan_type} scan type did not yield any matching yara results.")
+            malware_scan_obj.generate_terminal_output()
         
         print("\n")
 
@@ -236,11 +230,11 @@ def default_yara_scan():
 def handle_user_arguments():
     try:
         usr_input = input("Choice > ")
-        if usr_input != "3": menu_switch(usr_input)
+        if usr_input in ["1", "2"]: menu_switch(usr_input)
     except KeyboardInterrupt:
-        exit("[!] Program Exited Successfully")
+        exit("\n[!] User Interrupt. Program Exited Successfully")
     if not usr_input or usr_input not in ["1", "2", "3"]:
-        exit("[-] Invalid Choice Input - Please ensure your input is in the range of 1-3!")
+        exit(colored("[-] Invalid Choice Input - Please ensure your input is in the range of 1-3!", "red"))
         
     if usr_input == "1":
         virus_total_scan()
