@@ -41,16 +41,17 @@ def check_requirements():
                 print("[!] Downloading Git, Running command with sudo")
                 run_subprocess_command("sudo apt install git")
             else:  # For Windows systems
-                print("[!] Downloading Git from Windows Machine ... Please Wait, a UAC prompt should appear shortly with the installation.")
+                print("[!] Downloading Git for Windows ... Please Wait, this may take a while. A UAC prompt should appear shortly with the installation.")
                 run_subprocess_command("winget install --id Git.Git -e --source winget")
                 
             command_output = run_subprocess_command("git --version", True)
             if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
-                sys.exit("\n[-] Error in installation. Unable to install Git, please do this manually to resolve the issue and come back to the installation.")
+                print("\nGit was installed, but no copy was found. This may be due to a system error during installation.")
+                sys.exit("[-] Install manually from: 'https://git-scm.com/downloads/win' to resolve this issue on your machine.")
             else:
                 print("[+] Successfully installed Git! Proceeding with setup . . . \n")
                 clear_screen()
-        elif "RPC failed" in command_output:
+        elif "RPC failed" in command_output.stderr.decode("utf-8"):
             sys.exit("[-] Installation failed when Cloning. This is potentially due to an unstable internet connection, the issue is temporary. Please re-run setup.py to fix this problem")
             
         elif user_choice == "2":
@@ -80,13 +81,13 @@ def run_subprocess_command(command, outputFlag=False):
             return command_output
     except Exception as err:
         if err:
-            sys.exit(f"\n[-] Fatal error when executing system level command -> {err}")
+            sys.exit(f"\n[-] Fatal error when executing system level command -> {str(err)}")
         else:
             sys.exit("\n[-] Unknown fatal error when executing a system level command! This can be due to an aborted operation or an internal command issue.")
     
     # Check for errors in the command
-    if command_output.returncode != 0:
-        sys.exit(f"\n[-]Captured error when running system level command, log output: \n{command_output.stderr.decode('utf-8')}")
+    if command_output.stderr.decode('utf-8') and command_output.returncode != 0:
+        sys.exit(f"\n[-] Captured error when running system level command, log output: \n{command_output.stderr.decode('utf-8')}")
 
 def create_and_traverse_directory(name):
     try:
