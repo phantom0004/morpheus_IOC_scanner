@@ -220,9 +220,9 @@ def default_yara_scan():
         
         # Generate output based on scan type
         if scan_type == "file_analysis":
-            general_file_scan_obj.generate_terminal_output()
+            general_file_scan_obj.generate_terminal_output(yara_base_instance)
         else:
-            malware_scan_obj.generate_terminal_output()
+            malware_scan_obj.generate_terminal_output(yara_base_instance)
         
         print("\n")
 

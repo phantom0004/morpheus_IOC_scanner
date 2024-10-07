@@ -1,3 +1,5 @@
+import "pe"
+
 rule sensitive_windows_file_access
 {
     meta:
