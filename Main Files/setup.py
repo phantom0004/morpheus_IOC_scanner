@@ -75,6 +75,7 @@ def run_subprocess_command(command, outputFlag=False):
     try:
         # Capture both stdout and stderr
         command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        if outputFlag: return command_output
     except Exception as err:
         if err:
             sys.exit(f"\n[-] Fatal error when executing system level command -> {str(err)}")
@@ -87,9 +88,6 @@ def run_subprocess_command(command, outputFlag=False):
             sys.exit("\n[-] Insufficient permissions to continue the operation. Please run as admin/root and try again.")
         else:
             sys.exit(f"\n[-] Captured error when running system level command, log output: \n{command_output.stderr.decode('utf-8')}")
-    
-    if outputFlag: 
-        return command_output
 
 def create_and_traverse_directory(name):
     try:
