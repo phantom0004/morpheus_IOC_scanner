@@ -14,21 +14,25 @@ and will support different scan types, including malware and general file analys
 
 import os
 from typing import Union, List
-from termcolor import colored
 try:
     import yara
-except:
-    # Shows a guide on how to fix this class issue, since Yara can be problematic at times ...
-    print("[-] Unable to load Yara Module! Below are the follow steps to troubleshoot :")
-    print("1. Ensure 'yara' and 'python-yara' is installed using the 'requirements.txt' file.")
-    print("2. 'libyara.so' Not found when using yara? Follow these steps on Linux:")
-    print("     - sudo echo '/usr/local/lib' >> /etc/ld.so.conf")
-    print("     - sudo ldconfig")
-    exit("If all fails, Please view this discussion : https://stackoverflow.com/questions/41255478/issue-oserror-usr-lib-libyara-so-cannot-open-shared-object-file-no-such-fi.")
+    from termcolor import colored
+except Exception as err:
+    if "libyara" in str(err):
+        print("\nLibyara not found in your 'Yara' installation. Below are steps to resolve:")
+        if os.name != "nt":
+            print("""\n> Update the dynamic linker to recognize the new path for shared libraries
+- sudo echo '/usr/local/lib' >> /etc/ld.so.conf
+- sudo ldconfig
+            """)
+        print("> Purge Yara and python-yara entirely and reinstall the packages.")
+        exit("\nIf all else fails, open an issue on Morpheus with your details.")
+    else:
+        exit(f"Error on Import : {err}")
 
 # Parent class which handles the core of this file
 class BaseDetection:
-    def __init__(self, file_to_scan:str, scan_type:str="file_analysis") -> None:        
+    def __init__(self, file_to_scan:str="", scan_type:str="file_analysis") -> None:        
         # User Defined Value - Program Setup
         self.file_to_scan = file_to_scan
         self.scan_type = scan_type
@@ -98,27 +102,34 @@ class BaseDetection:
             return None
         else:
             return yara_matches
-
+    
+    @staticmethod
+    def output_yara_matches(yara_matches:List) -> None:
+        if yara_matches:
+            print(colored("[+] Found Matches: ", attrs=['bold']))
+            
+            for match in yara_matches:
+                print(f"> {colored(match, 'green')}")
+    
 # Most extensive scan, scans for malware and IOC's based on the Yara database
-class MalwareScan():
+class MalwareScan(BaseDetection):
     def __init__(self, rule_matches:List) -> None:
         self.rule_matches = rule_matches
+        super().__init__() # Inherit from BaseDetection
     
-    def generate_terminal_output(self) -> None:
-        for match in self.rule_matches:
-            print(match)
+    def generate_terminal_output(self, instance: 'MalwareScan') -> None:
+        instance.output_yara_matches(self.rule_matches)
         
     # Output will be processed in a document
     @staticmethod
     def generate_document_report(scan_output:List) -> None:
-        # Will use either FPDF or reportlab
-        pass
+        pass # Will use either FPDF or reportlab
 
 # Least intensive scan, the first scan of Morpheus which scans for file information
-class GeneralFileScan():
+class GeneralFileScan(BaseDetection):
     def __init__(self, rule_matches:List) -> None:
         self.rule_matches = rule_matches
+        super().__init__() # Inherit from BaseDetection
         
-    def generate_terminal_output(self) -> None:
-        for match in self.rule_matches:
-            print(match)
+    def generate_terminal_output(self, instance: 'GeneralFileScan') -> None:
+        instance.output_yara_matches(self.rule_matches)
