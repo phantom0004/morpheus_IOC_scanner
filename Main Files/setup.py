@@ -27,7 +27,7 @@ def clear_screen():
     banner()
 
 def check_requirements():
-    command_output = run_subprocess_command("git clone", True)
+    command_output = run_subprocess_command("git --version", True)
     
     if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
         print("[-] Missing Critical Dependancy: You dont have 'git' installed on your system. Attempt to download to fix issue? \n")
@@ -73,12 +73,8 @@ def delete_file(file_path):
 def run_subprocess_command(command, outputFlag=False):
     command_output = ""
     try:
-        if not outputFlag:
-            command_output = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, shell=True)
-        else:
-            # Capture both stdout and stderr and return the result
-            command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-            return command_output
+        # Capture both stdout and stderr
+        command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     except Exception as err:
         if err:
             sys.exit(f"\n[-] Fatal error when executing system level command -> {str(err)}")
@@ -91,6 +87,9 @@ def run_subprocess_command(command, outputFlag=False):
             sys.exit("\n[-] Insufficient permissions to continue the operation. Please run as admin/root and try again.")
         else:
             sys.exit(f"\n[-] Captured error when running system level command, log output: \n{command_output.stderr.decode('utf-8')}")
+    
+    if outputFlag: 
+        return command_output
 
 def create_and_traverse_directory(name):
     try:
@@ -112,7 +111,7 @@ def create_yara_directories():
     except:
         pass
       
-    if os.path.exists("yara_rules"):
+    if os.path.exists(os.path.join(os.getcwd(), "yara_rules")):
         os.chdir("yara_rules") # Go to main directory
     else:
         print("[!] 'yara_rules' folder does not exist! Creating folder, however this may bring future errors due to missing files. \n")
@@ -122,7 +121,9 @@ def create_yara_directories():
     if os.listdir(os.path.join("..", "external_yara_rules")):
         print("[+] Data found in 'external_yara_rules'! Continuining will delete the default rules and add the Morpheus Database")
         try:
-            input("Press any key to continue, or CTRL+C to Cancel Setup ... ")
+            input("\nPress any key to continue, or CTRL+C to Cancel Setup ... ")
+            print("Loading Setup ...")
+            clear_screen()
         except KeyboardInterrupt:
             sys.exit("\nProgram Aborted by User.")
         
@@ -277,7 +278,7 @@ def main():
 
     for index, link in enumerate(rule_links):
         print(f"\t\nCurrently Processing the following resource: {link}")
-        run_subprocess_command(f"git clone --depth 1 --recurse-submodules {link}") # Fetch the latest version of the files
+        run_subprocess_command(f"git clone --depth 1 --recurse-submodules {link}")
         print(f"[+] Installed {index+1}/{len(rule_links)} dependencies")
 
     # Extract yara rules
