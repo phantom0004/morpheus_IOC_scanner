@@ -23,7 +23,7 @@ def clear_screen():
     if os.name != "nt":
         os.system("clear")
     else:
-        os.sytem("cls")
+        os.system("cls")
     banner()
 
 def check_requirements():
