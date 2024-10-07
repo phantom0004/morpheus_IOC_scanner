@@ -79,7 +79,7 @@ class BaseDetection:
             
             if matches and "Error" not in str(matches):
                 all_matches.extend(matches)  # Append matches to the all_matches list
-        
+                        
         return all_matches  # Return all matches from all YARA rules
                 
     # Will handle returning matches found with the file and ruleset
@@ -105,11 +105,13 @@ class BaseDetection:
     
     @staticmethod
     def output_yara_matches(yara_matches:List) -> None:
-        if yara_matches:
-            print(colored("[+] Found Matches: ", attrs=['bold']))
-            
+        if yara_matches:            
             for match in yara_matches:
-                print(f"> {colored(match, 'green')}")
+                print(colored(f"[+] Found Match -> '{match}' {'Tags : {match.tags}' if match.tags else ''}", "green"))
+                for match_string in match.strings:
+                    print(f"\t> {match_string}")
+        else:
+            print(colored("[!] No Matches Found.", "yellow"))
     
 # Most extensive scan, scans for malware and IOC's based on the Yara database
 class MalwareScan(BaseDetection):
@@ -118,6 +120,7 @@ class MalwareScan(BaseDetection):
         super().__init__() # Inherit from BaseDetection
     
     def generate_terminal_output(self, instance: 'MalwareScan') -> None:
+        print(colored("Malware Scan - Results :", attrs=["bold"]))
         instance.output_yara_matches(self.rule_matches)
         
     # Output will be processed in a document
@@ -132,4 +135,5 @@ class GeneralFileScan(BaseDetection):
         super().__init__() # Inherit from BaseDetection
         
     def generate_terminal_output(self, instance: 'GeneralFileScan') -> None:
+        print(colored("General File Scan - Results :", attrs=["bold"]))
         instance.output_yara_matches(self.rule_matches)
