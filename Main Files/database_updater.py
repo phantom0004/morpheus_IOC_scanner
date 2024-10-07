@@ -24,6 +24,12 @@ def display_banner():
  `              V                '
     """
     print(banner)
+    
+def check_default_rules():
+    if os.path.exists(os.path.join("yara_rules", "external_yara_rules", "default_built_in_rules")):
+        print(colored("[!] Default Morpheus YARA rules detected.", "yellow"))
+        print(colored("[-] The default YARA rules database cannot use this feature.", attrs=["bold"]))
+        exit("\nTo update the YARA rules, please run 'setup.py' to initialize the main Morpheus database. Alternatively, you may continue using the default YARA rules.")
 
 def extract_hashes_from_file(path):
     hash_pattern = r"([0-9a-f]{40})"
@@ -60,7 +66,7 @@ def name_and_links(github_links):
     
     return repository_link_and_names
 
-def check_requirements():
+def check_requirements():    
     # Check if critical files are in place
     if not os.path.exists("version_tracking"):
         sys.exit("[-] Critical Folder 'version_tracking' was not found! Please use 'setup.py' to create this file.")
@@ -118,6 +124,9 @@ def update_text_file_hash(old_file_content, old_repo_hash, new_repo_hash):
     os.chdir("..")
     os.chdir("yara_rules")
     os.chdir("external_yara_rules")
+
+# Check if user is using default rules
+check_default_rules()
 
 # Check required dependancies and folders needed for script
 check_requirements()
