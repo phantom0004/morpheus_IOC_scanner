@@ -15,7 +15,7 @@ def banner():
     """
     
     print(banner)
-    print("[!] Warning: Antivirus may flag some rules as malicious due to shellcode. This is expected and can be ignored.")
+    print("[!] Warning: Antivirus may flag some rules as malicious due to shellcode. This is expected and can be ignored. \n")
 
 def clear_screen():
     sleep(3)
@@ -103,21 +103,21 @@ def create_and_traverse_directory(name):
         sys.exit(f"\nAn unidentified error has occured when traversing the directory : {err}")
 
 def create_yara_directories(): 
-    # Check if in right directory
-    try:
-        os.chdir("Main Files")
-    except:
-        pass
-      
-    if os.path.exists(os.path.join(os.getcwd(), "yara_rules")):
-        os.chdir("yara_rules") # Go to main directory
-    else:
+    if "Main Files" not in os.getcwd(): sys.exit("[-] Ensure you're in the Morpheus directory before continuing! Program Aborted.")
+    main_program_directory = os.getcwd() # Get main program directory
+          
+    if not os.path.exists(os.path.join(os.getcwd(), "yara_rules")):
         print("[!] 'yara_rules' folder does not exist! Creating folder, however this may bring future errors due to missing files. \n")
+        # Create all relevant folders
         create_and_traverse_directory("yara_rules")
-                        
-    create_and_traverse_directory("external_yara_rules")
-    if os.listdir(os.path.join("..", "external_yara_rules")):
-        print("[+] Data found in 'external_yara_rules'! Continuining will delete the default rules and add the Morpheus Database")
+        create_and_traverse_directory("external_yara_rules")
+           
+    # Move into database
+    os.chdir(os.path.join(main_program_directory, "yara_rules"))
+    
+    # Go to main rule directory
+    if os.listdir(os.path.join("external_yara_rules")):
+        print("[+] Data found in 'external_yara_rules'. Continuining will delete all of its contents for new ones.")
         try:
             input("\nPress any key to continue, or CTRL+C to Cancel Setup ... ")
             print("Loading Setup ...")
@@ -126,12 +126,11 @@ def create_yara_directories():
             sys.exit("\nProgram Aborted by User.")
         
         # Delete Directory
-        os.chdir("..")
         try:
             shutil.rmtree("external_yara_rules")
         except PermissionError:
             delete_file("external_yara_rules")
-            
+          
         create_and_traverse_directory("external_yara_rules")
 
 def find_and_extract_yara_files():
