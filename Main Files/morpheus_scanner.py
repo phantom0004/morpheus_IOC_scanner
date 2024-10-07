@@ -197,6 +197,8 @@ def load_file(user_path):
 def default_yara_scan():
     if not os.path.exists(os.path.join(os.getcwd(), "yara_rules", "external_yara_rules")):
         exit(colored("[-] Missing Yara Database, Setup.py has not been ran yet! Please run the script before running Morpheus.", "red"))
+    elif os.path.exists(os.path.join(os.getcwd(), "yara_rules", "external_yara_rules", "default_built_in_rules")):
+        print(colored("[!] Using Default Yara Rules. Results may be limited. \n", "yellow"))
     
     # Handle file data
     file_path = input("Enter the path of the file to scan > ").strip()

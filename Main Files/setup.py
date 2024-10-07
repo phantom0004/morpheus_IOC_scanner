@@ -15,7 +15,7 @@ def banner():
     """
     
     print(banner)
-    print("[!] Warning: Antivirus may flag some rules as malicious due to shellcode. This is expected and can be ignored.\n")
+    print("[!] Warning: Antivirus may flag some rules as malicious due to shellcode. This is expected and can be ignored.")
 
 def clear_screen():
     sleep(3)
@@ -87,7 +87,10 @@ def run_subprocess_command(command, outputFlag=False):
     
     # Check for errors in the command
     if command_output.stderr.decode('utf-8') and command_output.returncode != 0:
-        sys.exit(f"\n[-] Captured error when running system level command, log output: \n{command_output.stderr.decode('utf-8')}")
+        if "Access is denied" in command_output.stderr.decode('utf-8'):
+            sys.exit("\n[-] Insufficient permissions to continue the operation. Please run as admin/root and try again.")
+        else:
+            sys.exit(f"\n[-] Captured error when running system level command, log output: \n{command_output.stderr.decode('utf-8')}")
 
 def create_and_traverse_directory(name):
     try:
@@ -102,7 +105,13 @@ def create_and_traverse_directory(name):
     except Exception as err:
         sys.exit(f"\nAn unidentified error has occured when traversing the directory : {err}")
 
-def create_yara_directories():        
+def create_yara_directories(): 
+    # Check if in right directory
+    try:
+        os.chdir("Main Files")
+    except:
+        pass
+      
     if os.path.exists("yara_rules"):
         os.chdir("yara_rules") # Go to main directory
     else:
@@ -111,7 +120,11 @@ def create_yara_directories():
                         
     create_and_traverse_directory("external_yara_rules")
     if os.listdir(os.path.join("..", "external_yara_rules")):
-        print("[+] Data found in 'external_yara_rules'! Erasing folder to add new data ... \n")
+        print("[+] Data found in 'external_yara_rules'! Continuining will delete the default rules and add the Morpheus Database")
+        try:
+            input("Press any key to continue, or CTRL+C to Cancel Setup ... ")
+        except KeyboardInterrupt:
+            sys.exit("\nProgram Aborted by User.")
         
         # Delete Directory
         os.chdir("..")
