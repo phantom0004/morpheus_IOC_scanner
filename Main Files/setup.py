@@ -15,7 +15,7 @@ def banner():
     """
     
     print(banner)
-    print("[!] Warning: Antivirus may flag some rules as malicious due to shellcode. This is expected and can be ignored. \n")
+    print("[!] Notice: Some rules may trigger antivirus alerts due to the presence of malicious patterns for detection. This behavior is expected and not a cause for concern. \n")
 
 def clear_screen():
     sleep(3)
@@ -51,9 +51,6 @@ def check_requirements():
             else:
                 print("[+] Successfully installed Git! Proceeding with setup . . . \n")
                 clear_screen()
-        elif "RPC failed" in command_output.stderr.decode("utf-8"):
-            sys.exit("[-] Installation failed when Cloning. This is potentially due to an unstable internet connection, the issue is temporary. Please re-run setup.py to fix this problem")
-            
         elif user_choice == "2":
             print("Ignoring Error, Continuing with program . . . \n")
             banner()
@@ -86,6 +83,8 @@ def run_subprocess_command(command, outputFlag=False):
     if command_output.stderr.decode('utf-8') and command_output.returncode != 0:
         if "Access is denied" in command_output.stderr.decode('utf-8'):
             sys.exit("\n[-] Insufficient permissions to continue the operation. Please run as admin/root and try again.")
+        elif "RPC failed" in command_output.stderr.decode("utf-8"):
+            sys.exit("[-] Installation failed when Cloning. This is potentially due to an unstable internet connection, the issue is temporary. Please re-run setup.py to fix this problem")
         else:
             sys.exit(f"\n[-] Captured error when running system level command, log output: \n{command_output.stderr.decode('utf-8')}")
 
@@ -103,10 +102,10 @@ def create_and_traverse_directory(name):
         sys.exit(f"\nAn unidentified error has occured when traversing the directory : {err}")
 
 def create_yara_directories(): 
-    if "Main Files" not in os.getcwd(): sys.exit("[-] Ensure you're in the Morpheus directory before continuing! Program Aborted.")
+    if "main files" not in os.getcwd().lower(): sys.exit("[-] Ensure you're in the Morpheus directory before continuing! Program Aborted.")
     main_program_directory = os.getcwd() # Get main program directory
           
-    if not os.path.exists(os.path.join(os.getcwd(), "yara_rules")):
+    if not os.path.exists(os.path.join(main_program_directory, "yara_rules")):
         print("[!] 'yara_rules' folder does not exist! Creating folder, however this may bring future errors due to missing files. \n")
         # Create all relevant folders
         create_and_traverse_directory("yara_rules")
@@ -116,7 +115,7 @@ def create_yara_directories():
     os.chdir(os.path.join(main_program_directory, "yara_rules"))
     
     # Go to main rule directory
-    if os.listdir(os.path.join("external_yara_rules")):
+    if os.listdir("external_yara_rules"):
         print("[+] Data found in 'external_yara_rules'. Continuining will delete all of its contents for new ones.")
         try:
             input("\nPress any key to continue, or CTRL+C to Cancel Setup ... ")
@@ -184,7 +183,7 @@ def installation_guide():
     if not user_choice:
         user_choice = "2"
     
-    print(f"[+] Choice Saved [{'NanoShield Edition' if user_choice == '1' else 'Fortress Edition'}] Loading installation menu . . .")
+    print(f"[+] Choice Saved -> {'NanoShield Edition' if user_choice == '1' else 'Fortress Edition'} \nLoading installation menu . . .")
     return user_choice
 
 def get_latest_commit(link):

@@ -1,5 +1,0 @@
-[2024-09-12 10:23:45] INFO: User 'admin' logged in from IP 192.168.1.12
-[2024-09-12 10:25:02] WARNING: Failed login attempt for user 'guest' from IP 192.168.1.15
-[2024-09-12 10:30:12] INFO: File 'confidential_report.pdf' uploaded by 'admin'
-[2024-09-12 10:45:33] ERROR: Unauthorized access attempt on '/etc/passwd' by user 'john.doe'
-[2024-09-12 11:00:14] INFO: Server backup initiated by user 'system'
