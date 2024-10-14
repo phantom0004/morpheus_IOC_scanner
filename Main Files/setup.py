@@ -161,6 +161,9 @@ def create_yara_directories():
         # Create all relevant folders
         create_and_traverse_directory("yara_rules")
         create_and_traverse_directory("external_yara_rules")
+    elif not os.path.exists(os.path.join(PROGRAM_MAIN_PATH, "yara_rules", "external_yara_rules")):
+        os.chdir("yara_rules")
+        create_and_traverse_directory("external_yara_rules")
            
     # Move into database
     os.chdir(os.path.join(PROGRAM_MAIN_PATH, "yara_rules"))
