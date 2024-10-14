@@ -18,7 +18,9 @@ def banner():
     """
     
     print(banner)
-    print("[!] Notice: Some rules may trigger antivirus alerts due to malicious patterns. This is expected.\n")
+    print("[!] Notice: Some rules may trigger antivirus alerts due to malicious patterns. This is expected.")
+    if os.name != "nt": check_linux_user_permissions()
+    print("\n\n")
 
 def clear_screen():
     sleep(3)
@@ -29,20 +31,47 @@ def clear_screen():
         os.system("cls")
     banner()
 
+def check_linux_package_manager():
+    # Common package managers
+    packages = ["apt", "dnf", "pacman", "rpm"]
+    for package in packages:
+        output = run_subprocess_command(f"which {package}", True)
+        
+        if output and "not found" not in output:
+            return package
+    
+    # All Failed, default to APT as a fail-over
+    return "apt"
+
+def check_linux_user_permissions():
+    user_id = run_subprocess_command("id", True)
+    if "uid=0" not in user_id:
+        print("[-] Running as a non-privileged user! This may cause installation errors.")
+
 def check_requirements():
-    command_output = run_subprocess_command("git --version", True)
+    command_output = run_subprocess_command("git --version")
     
     if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
-        print("[-] Missing Critical Dependency: 'git' is not installed. This may be a false flag on Windows. Attempt to download and fix?\n")
-        print("1 . Attempt to download Git on machine (Requires root on Linux)\n2 . Ignore error and proceed (Not recommended, could result in crashes) \n3 . Exit Program")
+        print("[-] Missing Dependency: 'git' is not installed. This may be a false flag. Attempt to download and fix?\n")
+        print("1 . Attempt to download Git on machine \n2 . Ignore error and proceed (Not recommended, could result in crashes) \n3 . Exit Program")
         
         user_choice = input("Choice > ").strip()
         print()
         
         if user_choice == "1":
             if os.name != "nt":  # For non-Windows systems (Linux, macOS, etc.)
+                package_manager = check_linux_package_manager() # Get used package manager
+                
                 print("[!] Downloading Git, Running command with sudo")
-                run_subprocess_command("sudo apt install git")
+                if package_manager == "apt":
+                    run_subprocess_command("sudo apt update && sudo apt install git -y")
+                elif package_manager == "dnf":
+                    run_subprocess_command("sudo dnf update && sudo dnf install git -y")
+                elif package_manager == "pacman":
+                    run_subprocess_command("sudo pacman -Syu git --noconfirm")
+                elif package_manager == "rpm":
+                    # Assuming dnf is preferred on RPM-based systems
+                    run_subprocess_command("sudo dnf update && sudo dnf install git -y")
             else:  # For Windows systems
                 print("[!] Downloading Git for Windows ... Please Wait, this may take a while. A UAC prompt should appear shortly with the installation.")
                 run_subprocess_command("winget install --id Git.Git -e --source winget")
@@ -51,8 +80,8 @@ def check_requirements():
                 run_subprocess_command('set "PATH=%PATH%;C:\\Program Files\\Git\\cmd"', True)  # Default path
             
             # Verify Installation
-            command_output = run_subprocess_command("git --version", True)
-            if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]) or not command_output.stderr.decode("utf-8"):
+            command_output = run_subprocess_command("git --version")
+            if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
                 if os.name != "nt":
                     print("\nGit may not have been installed correctly, the program is unable to access the command. This may be due to a system error during installation.")
                     sys.exit("[-] Install manually with this guide: 'https://git-scm.com/book/en/v2/Getting-Started-Installing-Git' to resolve this issue on your machine, or try again.")
@@ -83,7 +112,11 @@ def run_subprocess_command(command, outputFlag=False):
     try:
         # Capture both stdout and stderr
         command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        return command_output
+        
+        if outputFlag is True:
+            return command_output.stdout.decode("utf-8") # Readable Format
+        else:
+            return command_output # Raw
     except Exception as err:
         if err:
             sys.exit(f"\n[-] Fatal error when executing system level command -> {str(err)}")
@@ -202,7 +235,7 @@ def installation_guide():
     return user_choice
 
 def get_latest_commit(link):
-    update_log = run_subprocess_command(f"git ls-remote --heads {link}", True).stdout.decode("utf-8")
+    update_log = run_subprocess_command(f"git ls-remote --heads {link}", True)
             
     if "main" in update_log or "master" in update_log:
         update_log = update_log.splitlines()
@@ -300,7 +333,7 @@ def main():
         else:
             git_location = "git"
             if ABSOLUTE_PATH_FLAG is True:         
-                git_location = run_subprocess_command("where git", True).stdout.decode("utf-8").strip() # Locate git installation with CMD
+                git_location = run_subprocess_command("where git", True) # Locate git installation with CMD
                 
                 if not git_location or "not find files" in git_location:
                     print("\nGit is installed, but the program was unable to access it. This may be due to a system error during installation.")
