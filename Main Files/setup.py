@@ -87,6 +87,7 @@ def check_requirements():
                     sys.exit("[-] Install manually with this guide: 'https://git-scm.com/book/en/v2/Getting-Started-Installing-Git' to resolve this issue on your machine, or try again.")
                 else:
                     # For windows machines, sometimes enviromental variables may fail, thus use full path
+                    global ABSOLUTE_PATH_FLAG
                     ABSOLUTE_PATH_FLAG = True
             else:                
                 print("[+] Successfully installed Git! Proceeding with setup . . . \n")
@@ -148,6 +149,8 @@ def create_and_traverse_directory(name):
         sys.exit(f"\nAn unidentified error has occured when traversing the directory : {err}")
 
 def create_yara_directories(): 
+    global PROGRAM_MAIN_PATH
+    
     if "main files" not in os.getcwd().lower(): 
         sys.exit("[-] Ensure you're in the '/Main Files' Morpheus directory before continuing! Program Aborted.")
     else:
