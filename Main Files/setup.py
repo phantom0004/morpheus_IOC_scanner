@@ -4,6 +4,9 @@ import subprocess
 import sys
 from time import sleep
 
+ABSOLUTE_PATH_FLAG = False
+PROGRAM_MAIN_PATH = ""
+
 def banner():
     banner = r"""
     __  ___                 __                         _____      __            
@@ -15,7 +18,7 @@ def banner():
     """
     
     print(banner)
-    print("[!] Notice: Some rules may trigger antivirus alerts due to the presence of malicious patterns for detection. This behavior is expected and not a cause for concern. \n")
+    print("[!] Notice: Some rules may trigger antivirus alerts due to malicious patterns. This is expected.\n")
 
 def clear_screen():
     sleep(3)
@@ -30,7 +33,7 @@ def check_requirements():
     command_output = run_subprocess_command("git --version", True)
     
     if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
-        print("[-] Missing Critical Dependancy: You dont have 'git' installed on your system. Attempt to download to fix issue? \n")
+        print("[-] Missing Critical Dependency: 'git' is not installed. This may be a false flag on Windows. Attempt to download and fix?\n")
         print("1 . Attempt to download Git on machine (Requires root on Linux)\n2 . Ignore error and proceed (Not recommended, could result in crashes) \n3 . Exit Program")
         
         user_choice = input("Choice > ").strip()
@@ -44,11 +47,19 @@ def check_requirements():
                 print("[!] Downloading Git for Windows ... Please Wait, this may take a while. A UAC prompt should appear shortly with the installation.")
                 run_subprocess_command("winget install --id Git.Git -e --source winget")
                 
+                # Try set enviromental path to use 'git' command with no issues
+                run_subprocess_command('set "PATH=%PATH%;C:\\Program Files\\Git\\cmd"', True)  # Default path
+            
+            # Verify Installation
             command_output = run_subprocess_command("git --version", True)
-            if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
-                print("\nGit was installed, but no copy was found. This may be due to a system error during installation.")
-                sys.exit("[-] Install manually from: 'https://git-scm.com/downloads/win' to resolve this issue on your machine.")
-            else:
+            if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]) or not command_output.stderr.decode("utf-8"):
+                if os.name != "nt":
+                    print("\nGit may not have been installed correctly, the program is unable to access the command. This may be due to a system error during installation.")
+                    sys.exit("[-] Install manually with this guide: 'https://git-scm.com/book/en/v2/Getting-Started-Installing-Git' to resolve this issue on your machine, or try again.")
+                else:
+                    # For windows machines, sometimes enviromental variables may fail, thus use full path
+                    ABSOLUTE_PATH_FLAG = True
+            else:                
                 print("[+] Successfully installed Git! Proceeding with setup . . . \n")
                 clear_screen()
         elif user_choice == "2":
@@ -72,7 +83,7 @@ def run_subprocess_command(command, outputFlag=False):
     try:
         # Capture both stdout and stderr
         command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        if outputFlag: return command_output
+        return command_output
     except Exception as err:
         if err:
             sys.exit(f"\n[-] Fatal error when executing system level command -> {str(err)}")
@@ -85,6 +96,8 @@ def run_subprocess_command(command, outputFlag=False):
             sys.exit("\n[-] Insufficient permissions to continue the operation. Please run as admin/root and try again.")
         elif "RPC failed" in command_output.stderr.decode("utf-8"):
             sys.exit("[-] Installation failed when Cloning. This is potentially due to an unstable internet connection, the issue is temporary. Please re-run setup.py to fix this problem")
+        elif "files for the given pattern" in command_output.stderr.decode("utf-8"):
+            pass # Error is handled elsewhere
         else:
             sys.exit(f"\n[-] Captured error when running system level command, log output: \n{command_output.stderr.decode('utf-8')}")
 
@@ -102,17 +115,19 @@ def create_and_traverse_directory(name):
         sys.exit(f"\nAn unidentified error has occured when traversing the directory : {err}")
 
 def create_yara_directories(): 
-    if "main files" not in os.getcwd().lower(): sys.exit("[-] Ensure you're in the Morpheus directory before continuing! Program Aborted.")
-    main_program_directory = os.getcwd() # Get main program directory
+    if "main files" not in os.getcwd().lower(): 
+        sys.exit("[-] Ensure you're in the '/Main Files' Morpheus directory before continuing! Program Aborted.")
+    else:
+        PROGRAM_MAIN_PATH = os.getcwd() # Get main program directory
           
-    if not os.path.exists(os.path.join(main_program_directory, "yara_rules")):
+    if not os.path.exists(os.path.join(PROGRAM_MAIN_PATH, "yara_rules")):
         print("[!] 'yara_rules' folder does not exist! Creating folder, however this may bring future errors due to missing files. \n")
         # Create all relevant folders
         create_and_traverse_directory("yara_rules")
         create_and_traverse_directory("external_yara_rules")
            
     # Move into database
-    os.chdir(os.path.join(main_program_directory, "yara_rules"))
+    os.chdir(os.path.join(PROGRAM_MAIN_PATH, "yara_rules"))
     
     # Go to main rule directory
     if os.listdir("external_yara_rules"):
@@ -200,10 +215,16 @@ def get_latest_commit(link):
         return update_log.strip(), False
 
 def create_update_log(links, installation_type):
+    if "main files" not in os.getcwd().lower(): os.chdir(PROGRAM_MAIN_PATH) # Ensure user is in main path
+    
     if not os.path.exists("version_tracking"):
         os.mkdir("version_tracking")
         os.chdir("version_tracking")
-        create_update_text_file()
+    else:
+        os.chdir("version_tracking")
+    
+    # Create update log    
+    create_update_text_file()
     
     with open("repo_versions.txt", "w") as file:
         file.write(f"Version History Logs -> Installation Type : {installation_type} \n\n")
@@ -274,7 +295,22 @@ def main():
 
     for index, link in enumerate(rule_links):
         print(f"\t\nCurrently Processing the following resource: {link}")
-        run_subprocess_command(f"git clone --depth 1 --recurse-submodules {link}")
+        if os.name != "nt":
+            run_subprocess_command(f"git clone --depth 1 {link}")
+        else:
+            git_location = "git"
+            if ABSOLUTE_PATH_FLAG is True:         
+                git_location = run_subprocess_command("where git", True).stdout.decode("utf-8").strip() # Locate git installation with CMD
+                
+                if not git_location or "not find files" in git_location:
+                    print("\nGit is installed, but the program was unable to access it. This may be due to a system error during installation.")
+                    sys.exit("[-] Install manually from: 'https://git-scm.com/downloads/win' to resolve this issue on your machine.")
+                
+                git_location = f'"{git_location}"' # Append quotation marks for path
+                        
+            # Install with access to the git command
+            run_subprocess_command(f'{git_location} clone --depth 1 {link}')
+            
         print(f"[+] Installed {index+1}/{len(rule_links)} dependencies")
 
     # Extract yara rules
