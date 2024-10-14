@@ -47,7 +47,7 @@ def check_requirements():
                 print("[!] Downloading Git for Windows ... Please Wait, this may take a while. A UAC prompt should appear shortly with the installation.")
                 run_subprocess_command("winget install --id Git.Git -e --source winget")
                 
-                # Try set enviromental path to use 'git' command with no issues
+                # Try set environmental path to use 'git' command with no issues
                 run_subprocess_command('set "PATH=%PATH%;C:\\Program Files\\Git\\cmd"', True)  # Default path
             
             # Verify Installation
@@ -131,7 +131,7 @@ def create_yara_directories():
     
     # Go to main rule directory
     if os.listdir("external_yara_rules"):
-        print("[+] Data found in 'external_yara_rules'. Continuining will delete all of its contents for new ones.")
+        print("[+] Data found in 'external_yara_rules'. Continuing will delete all of its contents for new ones.")
         try:
             input("\nPress any key to continue, or CTRL+C to Cancel Setup ... ")
             print("Loading Setup ...")
@@ -278,7 +278,7 @@ def github_links_yara_rules():
     return rule_links
 
 def main():
-    # Display friendly banner and check required dependancies
+    # Display friendly banner and check required dependencies
     banner()
     check_requirements()
 
@@ -317,7 +317,7 @@ def main():
     find_and_extract_yara_files()
 
     # Create log file for future updating
-    print("\nCurrently Processing update log files for Morpheus")
+    print("\nCurrently Processing update log files for Morpheus...")
     create_update_log(rule_links, 'NanoShield Edition' if choice == '1' else 'Fortress Edition')
 
     print("\n[+] Setup Complete! Yara database has been added, you may now run Morpheus.")
