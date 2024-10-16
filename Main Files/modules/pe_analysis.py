@@ -20,7 +20,8 @@ class ExecutableAnalysis:
         self.file_to_scan = file_to_scan
         # Compiled PE Object
         self.pe = pefile.PE(file_to_scan)
-        
+    
+    # Extracts a particular section    
     def extract_section(self, section_name:str) -> Union[pefile.SectionStructure, None]:
         for section in self.pe_file_object.sections:
             if f".{section_name}" in section.Name.decode("utf-8"):
@@ -28,6 +29,7 @@ class ExecutableAnalysis:
             
         return None
     
+    # Gets common system architecture that the file uses
     def get_architecture(self) -> str:
         arch = self.pe.FILE_HEADER.Machine
         if arch == 0x8664:
@@ -35,8 +37,9 @@ class ExecutableAnalysis:
         elif arch == 0x014C:
             return "32_bit"
         else:
-            return "Unidentified Architecture"
+            return "Unidentified"
     
+    # Entropy detection on all sections
     def get_section_entropy(self) -> dict:
         entropy_results = {}
         for section in self.pe.sections:
@@ -56,5 +59,20 @@ class ExecutableAnalysis:
         
         return entropy_results
 
-    def is_signed(self) -> None:
-        pass
+    # Basic signature detection
+    def check_signature_presence(self) -> str:
+        if self.pe.OPTIONAL_HEADER.DATA_DIRECTORY[4].VirtualAddress != 0 and self.pe.OPTIONAL_HEADER.DATA_DIRECTORY[4].Size > 0:
+            return "File is developer signed. This does NOT mean that the signature is valid or trusted."
+        else:
+            return "File has not been developer signed"
+    
+    # If a value is returned, Morpheus will use this module
+    def is_pe_file(self) -> str:
+        if self.pe.is_exe():
+            return "[+] File is detected to be a Windows Portable Executable"
+        elif self.pe.is_driver():
+            return "[+] File is detected to be a Windows Driver"
+        elif self.pe.is_dll():
+            return "[+] File is detected to be a Windows DLL (Dynamic Link Library)"
+        else:
+            return None

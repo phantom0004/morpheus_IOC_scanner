@@ -210,6 +210,9 @@ def default_yara_scan():
     print("_"*int(37+len(file_path)))
     print("\n")
     
+    # PE file analysis
+    pe_file_analysis(file_path)
+    
     # Populate general file and choice information before scan
     for scan_type in ["file_analysis", "malware_scan"]:                
         # Setup of BaseDetection Class
@@ -227,12 +230,37 @@ def default_yara_scan():
             
         yara_base_instance.parse_yara_rules(yara_base_instance)
     
-    print(colored("\n[!] Full Scan Completed", "green"))
+    print(colored("\n\n[!] Full Scan Completed", "green"))
     print("Reminder: Ensure your YARA rules are regularly updated to maintain effective threat detection. Stay vigilant, and see you next time.")
 
+# Handles scanning of portable executable files
+def pe_file_analysis(file_path):
+    pe_obj = pe_analysis.ExecutableAnalysis(file_path)
+    
+    # Identify if file matches any PE file
+    if pe_obj.is_pe_file():
+        custom_message("portable executable analysis")
+    else:
+        # Dont continue any further
+        return 
+    
+    # Basic file information
+    print(colored(pe_obj.is_pe_file(), "green"))
+    print(pe_obj.check_signature_presence())
+    
+    entropy = pe_obj.get_section_entropy()
+    print("\nEntropy Information :")
+    for key, value in entropy.items():
+        print(f"\t> Section : {key} Verdict : {value}") 
+    
+    print("\n\n")
+
 # Display banner when scanning
-def custom_message(message, time):
-    full_message = f"Started {message} scan on {time}"
+def custom_message(message, time=None):
+    if time:
+        full_message = f"Started {message} scan on {time}"
+    else:
+        full_message = f"Started {message} scan"
     
     print("-" * len(full_message))
     print(colored(full_message, attrs=["bold"]))

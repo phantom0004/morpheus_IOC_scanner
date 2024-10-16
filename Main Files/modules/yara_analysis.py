@@ -70,7 +70,7 @@ class BaseDetection:
         if(instance.scan_type != "file_analysis"): total_paths = len(file_paths)
         
         # Compile rules individually to check for errors; if there's an error, skip the file
-        for index, path in enumerate(file_paths):
+        for index, path in enumerate(file_paths, start=1):
             # Only for Malware analysis, due to large capacity of files
             if(instance.scan_type != "file_analysis"):
                 print(colored(f"[STATUS] Currently Scanned {index}/{total_paths} Malware Rules ", "yellow", attrs=["bold"]), end='\r')
