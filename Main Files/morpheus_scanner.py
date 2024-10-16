@@ -1,5 +1,6 @@
 import time
 import os
+import datetime
 
 try:
     from termcolor import colored
@@ -213,20 +214,26 @@ def default_yara_scan():
     for scan_type in ["file_analysis", "malware_scan"]:                
         # Setup of BaseDetection Class
         yara_base_instance = yara_analysis.BaseDetection(file_path, scan_type)
-        # Rule setup and Match Finder
-        yara_matches = yara_base_instance.parse_yara_rules(yara_base_instance)
+        
+        # For time analysis
+        time_snapshot = (datetime.datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
         
         # Setup Other Classes that will handle the output
-        general_file_scan_obj = yara_analysis.GeneralFileScan(yara_matches)
-        malware_scan_obj = yara_analysis.MalwareScan(yara_matches)
-        
-        # Generate output based on scan type
         if scan_type == "file_analysis":
-            general_file_scan_obj.generate_terminal_output(yara_base_instance)
+            custom_message("file analysis", time_snapshot)
         else:
-            malware_scan_obj.generate_terminal_output(yara_base_instance)
-        
-        print("\n")
+            print("\n\n")
+            custom_message("malware analysis", time_snapshot)    
+            
+        yara_base_instance.parse_yara_rules(yara_base_instance)
+
+# Display banner when scanning
+def custom_message(message, time):
+    full_message = f"Started {message} scan on {time}"
+    
+    print("-" * len(full_message))
+    print(colored(full_message, attrs=["bold"]))
+    print("-" * len(full_message))
 
 # Handle menu user option
 def handle_user_arguments():
