@@ -247,6 +247,7 @@ def pe_file_analysis(file_path):
     # Basic file information
     print(colored(pe_obj.is_pe_file(), "green"))
     print(pe_obj.check_signature_presence())
+    print(f"File Architecture : {pe_obj.get_architecture()}" if pe_obj.get_architecture() != "Unidentified" else "Unidentified Architecture")
     
     entropy = pe_obj.get_section_entropy()
     print("\nEntropy Information :")
