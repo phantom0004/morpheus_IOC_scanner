@@ -99,3 +99,15 @@ class ExecutableAnalysis:
             entry_imports.append(entry.dll.decode('utf-8'))
         
         return entry_imports
+
+    # Identify potentially suspicious used API's, this does NOT mean it is malicious
+    def detect_suspicious_imports(self) -> dict:
+        found_suspicious_apis = {}
+        suspicious_apis = ['CreateRemoteThread', 'VirtualAlloc', 'WriteProcessMemory']
+        
+        for entry in self.pe.DIRECTORY_ENTRY_IMPORT:
+            for entry_import in entry.imports:
+                if entry_import.name and entry_import.name.decode("utf-8") in suspicious_apis:
+                    found_suspicious_apis[entry_import.name.decode("utf-8")] = entry.dll.decode("utf-8")
+        
+        return found_suspicious_apis

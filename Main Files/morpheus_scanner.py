@@ -257,13 +257,19 @@ def pe_file_analysis(file_path):
     # Identify any suspicious sections    
     suspicious_sections = pe_obj.detect_any_suspicious_sections()
     if suspicious_sections:
-        print("\nSuspicious Section/s Found :")
+        print("\nPotentially Suspicious Section/s Found :")
         for section in suspicious_sections:
             print(f"\t> {section}")
     
     entry_imports = pe_obj.identify_imports()
     if entry_imports:
         print(f"\nEntry Imports Identified : {', '.join(entry_imports)}")
+    
+    suspicious_api_calls = pe_obj.detect_suspicious_imports()
+    if suspicious_api_calls:
+        print("\nPotentially Suspicious API Calls (Presence does not confirm malicious intent) :")
+        for name, location in suspicious_api_calls.items():
+            print(f"Suspicious API : '{name}' found in '{location}'")
     
     print("\n\n")
 
