@@ -241,18 +241,29 @@ def pe_file_analysis(file_path):
     if pe_obj.is_pe_file():
         custom_message("portable executable analysis")
     else:
-        # Dont continue any further
-        return 
+        return # Dont continue any further
     
     # Basic file information
     print(colored(pe_obj.is_pe_file(), "green"))
-    print(pe_obj.check_signature_presence())
-    print(f"File Architecture : {pe_obj.get_architecture()}" if pe_obj.get_architecture() != "Unidentified" else "Unidentified Architecture")
+    print(">", pe_obj.check_signature_presence())
+    print(f"> File Architecture : {pe_obj.get_architecture()}" if pe_obj.get_architecture() != "Unidentified" else "> Unidentified Architecture")
     
+    # Gather entropy information
     entropy = pe_obj.get_section_entropy()
     print("\nEntropy Information :")
     for key, value in entropy.items():
         print(f"\t> Section : {key} Verdict : {value}") 
+    
+    # Identify any suspicious sections    
+    suspicious_sections = pe_obj.detect_any_suspicious_sections()
+    if suspicious_sections:
+        print("\nSuspicious Section/s Found :")
+        for section in suspicious_sections:
+            print(f"\t> {section}")
+    
+    entry_imports = pe_obj.identify_imports()
+    if entry_imports:
+        print(f"\nEntry Imports Identified : {', '.join(entry_imports)}")
     
     print("\n\n")
 
