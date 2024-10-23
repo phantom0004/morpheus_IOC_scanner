@@ -269,7 +269,7 @@ def pe_file_analysis(file_path):
     if suspicious_api_calls:
         print("\nPotentially Suspicious API Calls (Presence does not confirm malicious intent) :")
         for name, location in suspicious_api_calls.items():
-            print(f"Suspicious API : '{name}' found in '{location}'")
+            print(f"\t> Suspicious API : '{name}' found in '{location}'")
     
     print("\n\n")
 
