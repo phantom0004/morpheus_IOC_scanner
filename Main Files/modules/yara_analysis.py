@@ -73,14 +73,13 @@ class BaseDetection:
         for index, path in enumerate(file_paths, start=1):
             # Only for Malware analysis, due to large capacity of files
             if(instance.scan_type != "file_analysis"):
-                print(colored(f"[STATUS] Currently Scanned {index}/{total_paths} Malware Rules ", "yellow", attrs=["bold"]), end='\r')
+                print(colored(f"[STATUS] Currently Scanned {index}/{total_paths} Malware Rules ", "yellow", attrs=["bold"]), end='\r', flush=True)
             
             try:
                 # Find matches and add them to the collected list
                 rules = yara.compile(filepath=path)
                 match = instance.identify_matches(rules)
             except yara.SyntaxError:
-                print(colored(f"[-] File Skipped -> Error when compiling '{os.path.basename(path)}'", "red"))
                 continue  # Error in rule file, skip to avoid crashes
             
             if match and "Error" not in str(match):
@@ -104,9 +103,13 @@ class BaseDetection:
     def output_yara_matches(yara_match:yara.Match) -> None:
         if yara_match:            
             for match in yara_match:
-                print(colored(f"[+] Found Match -> '{match}' {'Tags : {match.tags}' if match.tags else ''}", "green"))
+                tags = f"Matched Tags: {str(match.tags)}" if match.tags else ""
+                print(' ' * 80, end='\r')  # Clears reminants from the dynamic printing
+                print(f"[+] Matched Rule: '{colored(str(match), 'green', attrs=['bold'])}'"+"  "+tags)
+                
                 for match_string in match.strings:
-                    print(f"\t> {match_string}")
+                    # Ignore very short names to save clutter (Probably meaningless names)
+                    if not len(str(match_string)) <= 4: print(f"\t> Matched String: {match_string}")
         else:
             print(colored("[!] No Matches Found.", "yellow"))
     
