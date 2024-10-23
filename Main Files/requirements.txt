@@ -1,5 +1,5 @@
 yara
 yara-python
 pefile
-vt
+vt-py
 termcolor
