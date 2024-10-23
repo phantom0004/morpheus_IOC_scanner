@@ -103,13 +103,20 @@ class BaseDetection:
     def output_yara_matches(yara_match:yara.Match) -> None:
         if yara_match:            
             for match in yara_match:
+                # Required Variables
                 tags = f"Matched Tags: {str(match.tags)}" if match.tags else ""
+                metadata = f"Rule Description: {str(match.meta["description"])}" if match.meta["description"] else ""
+                
                 print(' ' * 80, end='\r')  # Clears reminants from the dynamic printing
+                # Rule Name and Tags
                 print(f"[+] Matched Rule: '{colored(str(match), 'green', attrs=['bold'])}'"+"  "+tags)
+                # Metadata Matches
+                print(colored(metadata.capitalize(), "yellow"))
                 
                 for match_string in match.strings:
                     # Ignore very short names to save clutter (Probably meaningless names)
                     if not len(str(match_string)) <= 4: print(f"\t> Matched String: {match_string}")
+
         else:
             print(colored("[!] No Matches Found.", "yellow"))
     
