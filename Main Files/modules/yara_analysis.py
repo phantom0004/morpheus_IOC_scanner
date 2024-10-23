@@ -25,7 +25,7 @@ except Exception as err:
 - sudo echo '/usr/local/lib' >> /etc/ld.so.conf
 - sudo ldconfig
             """)
-        print("> Purge Yara and python-yara entirely and reinstall the packages.")
+        print("> Uninstall 'yara' with pip then install 'yara-python' with the following command : 'python3 -m pip install yara-python'")
         exit("\nIf all else fails, open an issue on Morpheus with your details.")
     else:
         exit(f"Error on Import : {err}")

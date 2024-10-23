@@ -343,7 +343,7 @@ def main():
                 
                 if not git_location or "not find files" in git_location:
                     print("\nGit is installed, but the program was unable to access it. This may be due to a system error during installation.")
-                    sys.exit("[-] Install manually from: 'https://git-scm.com/downloads/win' to resolve this issue on your machine.")
+                    sys.exit("[-] Install manually from: 'https://git-scm.com/downloads/win' or simply close and re-open the terminal to fix this issue (Works most times).")
                 
                 git_location = f'"{git_location}"' # Append quotation marks for path
                         
