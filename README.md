@@ -21,6 +21,12 @@
 - **VirusTotal Integration**:  
   Optionally integrate with VirusTotal to leverage multi-engine analysis for deeper insight into potential threats.
 
+- **Cross Compatability**:
+  Run Morpheus in the comfort of your own machine due to its cross compatability nature. Ensuring it can run on both Windows and Linux machines.
+
+- **Post Analysis PDF Document (TBA - IN PROGRESS)**:
+  Morpheus would be able to compile all results into a compiled PDF document, for further analysis and presentation.
+  
 ## Cyber Kill Chain and Morpheus
 
 ![Cyber Kill Chain](https://media.licdn.com/dms/image/C5612AQHCdEev7C56Gw/article-cover_image-shrink_720_1280/0/1520089627600?e=2147483647&v=beta&t=BTtweA-JrXypvEAoHWdhxHfk3UQvLSMJgIrPDUPoOXQ)
@@ -33,7 +39,7 @@ Morpheus is a file-based malware scanner built to detect a wide range of malicio
 - **Obfuscation & Anti-Forensics:** Catching malware files attempting to disguise their presence or eliminate forensic traces, signaling an effort to evade detection.
 - **Exfiltration:** Monitoring for files or embedded data configured to exfiltrate sensitive information from the target system.
 
-*Sophistication is in the name:*
+### Sophistication lies in this tool:
 
 Furthermore, Morpheus is equipped with advanced APT (Advanced Persistent Threat) detection, allowing it to catch even the most sophisticated attacks in real time. If the YARA ruleset isn’t enough, Morpheus seamlessly integrates with VirusTotal, one of the world’s leading platforms for malware analysis, widely trusted by security professionals. Rest easy knowing Morpheus has you covered.
 
@@ -45,7 +51,7 @@ Morpheus’s goal is to comprehensively address threats throughout every phase o
    Submit a file or hash to VirusTotal for an in-depth analysis using multiple antivirus engines. This mode provides comprehensive information about potential threats using VirusTotal's extensive database.
 
 2. **Default Scan (YARA/Pefile)**  
-   Perform a static scan using YARA rules and Pefile to identify common malicious patterns. This method can quickly flag suspicious files, including the custom detection of **KRYPT0S**, a ransomware developed as a proof of concept (POC).
+   Perform a static scan using YARA rules and Pefile to identify common malicious patterns. This method can quickly flag suspicious files, including the custom detection of **KRYPT0S**, a ransomware developed by me as a proof of concept (POC).
 
 ## Installation
 
