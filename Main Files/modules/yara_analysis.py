@@ -17,6 +17,7 @@ from typing import Union, List
 try:
     import yara
     from termcolor import colored
+    import reportlab
 except Exception as err:
     if "libyara" in str(err):
         print("\nLibyara not found in your 'Yara' installation. Below are steps to resolve:")
@@ -126,7 +127,10 @@ class MalwareScan(BaseDetection):
         self.rule_matches = rule_matches
         super().__init__() # Inherit from BaseDetection
             
-    # Output will be processed in a document
+    # Output will be processed into a document
     @staticmethod
-    def generate_document_report(scan_output:List) -> None:
-        pass # Will use either FPDF or reportlab
+    def generate_document_report(scan_output:dict) -> None:
+        # Reportlab will be used to generate a document
+        # The rules will be compiled in a dictionary for ease of access
+        # The "assets" folder will be used for document customization
+        pass

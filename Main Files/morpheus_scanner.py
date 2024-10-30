@@ -229,6 +229,8 @@ def default_yara_scan():
             custom_message("malware analysis", time_snapshot)    
             
         yara_base_instance.parse_yara_rules(yara_base_instance)
+        
+    # malware_base_instance = yara_analysis.MalwareScan()  <-- Will be implemented soon
     
     print(colored("\n\n[!] Full Scan Completed", "green"))
     print("Reminder: Ensure your YARA rules are regularly updated to maintain effective threat detection. Stay vigilant, and see you next time.")
