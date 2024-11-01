@@ -129,7 +129,7 @@ class MalwareScan(BaseDetection):
             
     # Output will be processed into a document
     @staticmethod
-    def generate_document_report(scan_output:dict) -> None:
+    def generate_document_report(scan_output:yara.Match) -> None:
         # Reportlab will be used to generate a document
         # The rules will be compiled in a dictionary for ease of access
         # The "assets" folder will be used for document customization
