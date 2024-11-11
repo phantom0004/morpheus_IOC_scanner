@@ -24,7 +24,10 @@
 - **Cross Compatability**:
   Run Morpheus in the comfort of your own machine due to its cross compatability nature. Ensuring it can run on both Windows and Linux machines.
 
-- **Post Analysis PDF Document (TBA - IN PROGRESS)**:
+- **High Speed Analysis (IN PROGRESS - RELEASED WITH MORPHEUS V2)**:
+ Using dynamic multithreading, Morpheus efficiently accelerates scanning across files of any size, leveraging its extensive database to quickly detect matches and optimize processing speed.
+
+- **Post Analysis PDF Document (IN PROGRESS - RELEASED WITH MORPHEUS V2)**:
   Morpheus would be able to compile all results into a compiled PDF document, for further analysis and presentation.
   
 ## Cyber Kill Chain and Morpheus
