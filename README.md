@@ -6,28 +6,28 @@
 
 ## Program Features
 
-- **Custom Detection for KRYPT0S Ransomware (Still in progress)**:  
+- **Custom Detection for KRYPT0S Ransomware (IN PROGRESS - RELEASED WITH MORPHEUS V2)**:        
   Includes tailored detection for the KRYPT0S ransomware POC. This project can be viewed [here](https://github.com/phantom0004/KRYPT0S-Ransomware_POC).
   
-- **High-Quality YARA Rules**:  
+- **High-Quality YARA Rules**:                                    
   Uses enterprise-grade YARA rules to detect malware, allowing thorough and reliable scanning.
 
-- **File Information Extraction**:  
+- **File Information Extraction**:                        
   Extract detailed file-related information through custom-made rules designed for comprehensive file analysis.
 
-- **Up to Date Yara Rules**:
+- **Up to Date Yara Rules**:                                                      
   Morpheus utilizes a custom script to instantly fetch new Yara rules whenever updates occur in the GitHub repository.
 
-- **VirusTotal Integration**:  
+- **VirusTotal Integration**:                          
   Optionally integrate with VirusTotal to leverage multi-engine analysis for deeper insight into potential threats.
 
-- **Cross Compatability**:
+- **Cross Compatability**:                            
   Run Morpheus in the comfort of your own machine due to its cross compatability nature. Ensuring it can run on both Windows and Linux machines.
 
-- **High Speed Analysis (IN PROGRESS - RELEASED WITH MORPHEUS V2)**:
- Using dynamic multithreading, Morpheus efficiently accelerates scanning across files of any size, leveraging its extensive database to quickly detect matches and optimize processing speed.
+- **High Speed Analysis (IN PROGRESS - RELEASED WITH MORPHEUS V2)**:                          
+  Using dynamic multithreading, Morpheus efficiently accelerates scanning across files of any size, leveraging its extensive database to quickly detect matches and optimize processing speed.
 
-- **Post Analysis PDF Document (IN PROGRESS - RELEASED WITH MORPHEUS V2)**:
+- **Post Analysis PDF Document (IN PROGRESS - RELEASED WITH MORPHEUS V2)**:                                
   Morpheus would be able to compile all results into a compiled PDF document, for further analysis and presentation.
   
 ## Cyber Kill Chain and Morpheus
