@@ -152,6 +152,10 @@ Below are error messages that can be outputted from Morpheus:
   
     To resolve this issue, try the following: ```git clone --depth 1 https://github.com/phantom0004/morpheus_IOC_scanner```
 
+6. **VirusTotal Resource not Found** : ```The requested resource (file or URL) was not found in VirusTotal's database.```
+
+   This error occurs when the file, URL, or hash isn't recognized by VirusTotal, as it must already exist in their database to display results. If no prior scans exist, detailed information won't be available. Sometimes, the API may return an error or no response, which could indicate an API issue rather than the absence of an entry. To resolve this, try submitting a hash (MD5, SHA-256, or SHA-1) instead of the file itself for potentially better results.
+
 Found an error which isin't documented here? Open an issue! Help Morpheus to grow <3
 
 <p align="center">
@@ -186,4 +190,7 @@ Morpheus V2 was tested by scanning an actual WannaCry sample. As demonstrated be
   <img src="https://github.com/user-attachments/assets/5b5d5bf3-6a23-4661-a268-1fe2e0b717da" alt="Image 3" width="2000" height="250">
 </div>
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">
+</p>
 
