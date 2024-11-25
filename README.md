@@ -12,10 +12,6 @@ Introducing **Morpheus IOC Scanner** — a reliable and advanced tool for detect
 
 ## Key Features of Morpheus V2
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/fdd3f909-ab56-4d72-b520-0aa61f3c4e5e" alt="gif" style="width: 80%; height: auto;">
-</p>
-
 - **Custom Detection for KRYPT0S Ransomware**:        
   Includes tailored detection for the KRYPT0S ransomware POC. This project can be viewed [here](https://github.com/phantom0004/KRYPT0S-Ransomware_POC).
   
