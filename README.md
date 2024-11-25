@@ -78,7 +78,7 @@ Morpheus’s goal is to comprehensively address threats throughout every phase o
 
   Provides detailed output, including insights from security vendors, community feedback, and more. Limitations include API rate limiting (though the default limit is relatively high) and no results for files that haven't been previously analyzed in the VirusTotal database.
 
-3. **Default Scan (YARA)**  
+2. **Default Scan (YARA)**  
    Perform a static scan using YARA rules and Pefile to identify common malicious patterns. This method can quickly flag suspicious files, including the custom detection of **KRYPT0S**, a ransomware developed by me as a proof of concept (POC).
    
   Provides enhanced features compared to the "VirusTotal Scan" option, including PDF output, AI integration, and access to an extensive signature database capable of detecting files not registered with VirusTotal. However, it may be prone to instability due to heavy dependencies and pre-setup requirements. While Morpheus undergoes rigorous testing, results may vary depending on the system.
