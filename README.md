@@ -173,3 +173,17 @@ Still stuck? Use **Option 3** in Morpheus to view the guide on how to get the Vi
 ### For Option 2 - Default Scan:
 After following the *installation* to ensure all depenacies are installed, you can just run the **morpheus_scanner.py** and choose the default scan option to analyze files with the built-in YARA rules and Pefile. 
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">
+</p>
+
+# Practical Analysis of WannaCry Using Morpheus V2
+Morpheus V2 was tested by scanning an actual WannaCry sample. As demonstrated below, the tool successfully extracts key details about the file, providing valuable insights through its AI-generated verdict. Additionally, the VirusTotal API integration enhances the analysis by offering deeper insights into the sample. Finally, the results can be compiled into a PDF, enabling comprehensive documentation for further review and analysis.
+
+<div style="display: flex; gap: 10px; align-items: center;">
+  <img src="https://github.com/user-attachments/assets/f9f1526d-7980-48d5-98fd-a405922cadc0" alt="Image 1" width="500" height="450">
+  <img src="https://github.com/user-attachments/assets/3c6beb37-c3f4-4ae7-b4ee-548055cd6fb6" alt="Image 2" width="500" height="450">
+  <img src="https://github.com/user-attachments/assets/5b5d5bf3-6a23-4661-a268-1fe2e0b717da" alt="Image 3" width="2000" height="250">
+</div>
+
+
