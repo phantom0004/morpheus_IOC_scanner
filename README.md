@@ -125,15 +125,15 @@ Running the setup script will seamlessly update the database and ensure you are 
 ## Common Issues Documented
 
 Below are error messages that can be outputted from Morpheus:
-1. Directory Error : ```[-] Ensure you're in the '/Main Files' Morpheus directory before continuing! Program Aborted.```
+1. **Directory Error** : ```[-] Ensure you're in the '/Main Files' Morpheus directory before continuing! Program Aborted.```
    
     The error above indicates that Morpheus is not being run from its "Main Files" folder. This folder serves as the primary directory for Morpheus. Running the program from any other directory will trigger this error because Morpheus relies on dynamic path extraction relative to the current working directory. If executed from a different directory, file paths will become invalid. To resolve this, ensure you run Morpheus from the "morpheus_IOC_scanner/Main Files" directory.
 
-3. Git Error : ```Git may not have been installed correctly, the program is unable to access the command. This may be due to a system error during installation.```
+3. **Git Usage Error** : ```Git may not have been installed correctly, the program is unable to access the command. This may be due to a system error during installation.```
    
    This is primarily a Windows-specific error that occurs when Git is not installed. Morpheus attempts to install Git using "winget" (a Windows package manager). While this usually succeeds, the terminal may need to be restarted for the environmental variables associated with Git to take effect. If this error appears, restart the terminal and re-run Morpheus. If the issue persists, manually install Git from its official website to resolve the problem.
 
-5. Libyara.so Error : ```Libyara not found in your 'Yara' installation. Please try uninstall all python dependencies and re-install them.```
+4. **Libyara.so Error** : ```Libyara not found in your 'Yara' installation. Please try uninstall all python dependencies and re-install them.```
    
    This is a known and persistent issue with the "yara" library in Python. It occurs when a required shared object is missing during the installation of "yara." This problem is commonly observed on both Windows and Linux systems and has been widely documented across various forums and resources. Below are some steps to help mitigate this error:
    - Purge all YARA libraries and files from the system, then attempt a re-installation to ensure any missing files are properly restored
@@ -141,6 +141,16 @@ Below are error messages that can be outputted from Morpheus:
    - If on Linux try rebuild the local library : First run ```sudo echo "/usr/local/lib" >> /etc/ld.so.conf``` then run ```sudo ldconfig```, then re-run the tool
 
    If the issue persists, you can refer to a thread where the problem is discussed in detail, including alternative methods shared by others who managed to resolve it. Link to thread can be found [here](https://stackoverflow.com/questions/41255478/issue-oserror-usr-lib-libyara-so-cannot-open-shared-object-file-no-such-fi).
+
+5. **Resolving RPC Errors When Cloning Morpheus with Git**
+
+   Morpheus is a large repository containing numerous YARA rules, which can require significant bandwidth to download via Git. In cases where your Wi-Fi signal is slow or unstable, you may encounter the following error:
+   
+   ![ZNA5N](https://github.com/user-attachments/assets/85af5f13-1f69-49c2-8105-93776b3b9e03)
+
+    If you encounter this issue, try cloning Morpheus using the following method to reduce network load by downloading only the latest items in the repository.
+  
+    To resolve this issue, try the following: ```git clone --depth 1 https://github.com/phantom0004/morpheus_IOC_scanner```
 
 Found an error which isin't documented here? Open an issue! Help Morpheus to grow <3
 
