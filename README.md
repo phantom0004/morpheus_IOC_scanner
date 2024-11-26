@@ -1,5 +1,9 @@
 # Morpheus IOC Scanner 🐦‍🔥 | Redefining Advanced Malware Detection
 
+---
+# 🚀 MORPHEUS V2 LAUNCHES TODAY! 🚀 -> Stay tuned later on today!
+---
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/868cbf26-a411-4d1a-98ee-7003b5496d8f" alt="Screenshot" style="width: 80%; height: auto;">
 </p>
