@@ -1,10 +1,28 @@
-# Made with <3 by Phantom0004 - All Rights Reserved
-# VirusTotal API integration
+"""
+VirusTotal API Integration
+Author: Phantom0004 (Daryl Gatt)
+
+Description:
+This module handles the integration with VirusTotal's API for analyzing files and URLs. 
+It enables automated retrieval of threat intelligence, including file hashes, URL reputations, 
+crowdsourced YARA rules, and threat classifications. The module provides detailed insight into 
+malicious attributes and behaviors identified by VirusTotal, complementing existing malware detection frameworks.
+
+Usage:
+This module facilitates interaction with VirusTotal's API to:
+- Analyze files and URLs for malicious indicators.
+- Retrieve crowdsourced intelligence, including YARA rules and MITRE ATT&CK mappings.
+- Classify threats based on popular threat labels and categories.
+- Parse and display detailed analysis results in an easy-to-understand format.
+
+"""
+
 try:
     import vt
     from termcolor import colored
 except ModuleNotFoundError:
-    exit("Library not found! Please install all requirements via the 'requirements.txt' file with PIP")
+    exit(f"'virus_total.py' Library Error -> Please install all requirements via the 'requirements.txt' file with PIP")
+
 import hashlib
 import requests 
 import json
@@ -13,26 +31,38 @@ import urllib.parse
 from urllib.parse import urlparse
 
 class VirusTotalAPI:
-    def __init__ (self, choice="", data="", API_KEY="", client_obj=""):
+    def __init__ (self, choice="1", data="placeholder", API_KEY="", client_obj=""):
         self.API_KEY = API_KEY
         self.data = data
         self.choice = choice
         self.client_obj = client_obj
-        
+    
+    # Verify and Connect to API Endpoint 
     def connect_to_endpoint(self):
         try:
             conn_object, status = vt.Client(self.API_KEY), "success"
             print(colored("✔ Connected to VirusTotal API Successfully \n", "green", attrs=["bold"]))
             return conn_object, status
+        
+        # VT library Related Exceptions
         except vt.error.APIError as vt_error:
+            print(colored("✘ API Error: Updating vt-py library to try fix issue ...", "yellow", attrs=["bold"]))
             os.system("pip install --upgrade vt-py") # Can fix common VT library issues
             try:
-                return vt.Client(self.API_key), "success"
+                conn_object = vt.Client(self.API_KEY)
+                print(colored("✔ Fix Completed - API Connected Successfully \n", "green", attrs=["bold"]))
+                return conn_object, "success"
             except:
+                print(colored("✘ Fix Failed - Failed to reconnect to VirusTotal API \n", "red", attrs=["bold"]))
                 return vt_error, "api_fail"
+        
+        # General Exceptions    
+        except NameError as err:
+            return err, "api_fail"
         except Exception as err:
             return err, "general_fail"
     
+    # Craft Dynamic API Request
     def craft_api_request(self):
         choice = self.choice.lower()
         data = self.data
@@ -52,6 +82,7 @@ class VirusTotalAPI:
         except:
             return request_string
 
+    # Send Request Using vt Library
     def send_api_request_using_vt(self, api_string):
         client_object = self.client_obj
         
@@ -65,6 +96,7 @@ class VirusTotalAPI:
         finally:
             client_object.close()
 
+    # Parse a wide range of API errors
     @staticmethod
     def parse_API_error(exception_string):
         error_message = str(exception_string)
@@ -90,6 +122,7 @@ class VirusTotalAPI:
         else:
             return f"An unknown error occurred: {error_message}"
 
+    # Identify a rough estimate of the criticality of the file
     @staticmethod
     def score_verdict(score_value):
         if not score_value:
@@ -106,6 +139,7 @@ class VirusTotalAPI:
         else:
             return colored(f"Good Scoring (Score: {score_value})", 'green')
     
+    # Hash file with any 3 algorithims 
     @staticmethod    
     def hash_file(file_data, hash_algo="sha256"):        
         if not isinstance(file_data, bytes):
@@ -133,6 +167,7 @@ class VirusTotalAPI:
         else:
             return "hash_digest_error"
 
+    # Calculate final verdict based on numerical value
     @staticmethod
     def final_verdict(last_analysis_result):
         malicious_count = 0
@@ -148,6 +183,7 @@ class VirusTotalAPI:
         else:
             print(f"[+] Final Verdict : ({colored('Deemed Likely Malicious', 'red')} (Marked Malicious by over 80% of vendors)")
 
+    # Classify threat based on categories, labels and threat names
     @staticmethod
     def classify_threat(threat_output):
         categories, labels, threat_names = set(), set(), set()
@@ -171,6 +207,7 @@ class VirusTotalAPI:
         print(f"[+] Labels           : {colored(', '.join(labels).replace('/', '', ''), attrs=['bold'])}")
         print(f"[+] Threat Names     : {colored(', '.join(threat_names), attrs=['bold'])}")
     
+    # Get signature rule information from several API's
     @staticmethod        
     def define_ruleset(ruleset_output):
         rule_id, rule_name, description, author, source = [], [], [], [], []
@@ -202,7 +239,8 @@ class VirusTotalAPI:
             print(f"      - Description    : {description[element]}")
             print(f"      - Author         : {author[element]}")
             print(f"      - Source         : {source[element]}")
-            
+    
+    # Main Function        
     def parse_API_output(self, output):
         choice = self.choice
             
@@ -212,7 +250,7 @@ class VirusTotalAPI:
             print(f"[+] File SHA256 Hash : {output.sha256}")
             print(f"[+] File Type        : {output.type_tag}")
             
-            print("\nDetailed crowdsourced output:")     
+            print("\nDetailed Crowdsourced Output:")     
             try:  
                 self.define_ruleset(output.crowdsourced_yara_results)
             except:
@@ -255,12 +293,13 @@ class VirusTotalAPI:
             category = value.get("category", "Uncategorised")
             print(f"[+] Vendor : {key.capitalize():<20} -> Category : {colored('Malicious', 'red') if category == 'malicious' else category.capitalize()}\tType : {value.get('result'.capitalize(), 'Unknown')}")
         
-        print("\n[+] User Comments: ")
+        print("\n[+] User Comments (Verify Thoroughly): ")
         self.extract_comments()
         
         print(f"Final Scan Verdict {colored('(Please do not consider the below as definitive)', 'yellow')}:")
         self.final_verdict(av_results)
 
+    # Send and get response
     def send_api_request_using_requests(self, api_param):
         API_KEY = self.API_KEY
         
@@ -277,6 +316,7 @@ class VirusTotalAPI:
         else:
             return "not_status_200"
 
+    # Extract community comments
     def extract_comments(self):  
         choice = self.choice
         data = self.data
@@ -300,6 +340,7 @@ class VirusTotalAPI:
             
             comment_number += 1
 
+    # Extract behaviour analysis information
     def extract_behaviour_techniques_of_file(self):    
         data = self.data
             
@@ -316,12 +357,14 @@ class VirusTotalAPI:
             desciption = (techniques.get(technique, [])[0].get("description", "None Found")).capitalize()
             print(f"[+] Technique ID : {technique:<15} | Description : {desciption}")
 
+    # Rescan URL if any fail arises
     def rescan_url(self):
         data = urllib.parse.quote(self.data, safe='')
         
         # May not always work, but if it does, a re-scan will be submitted
         self.send_api_request_using_requests(f"urls/{data}/analyse")
 
+    # Extract domain from link - if not already
     @staticmethod
     def extract_domain(data):
         if "https" in data or "http" in data:
@@ -330,6 +373,7 @@ class VirusTotalAPI:
         
         return data
 
+    # Identify alternative names of the file sample    
     def find_alternative_names(self):
         data = self.extract_domain(self.data)
         

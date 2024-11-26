@@ -1,0 +1,4 @@
+This file contains a simple value used to track the state of the 'setup.py' file
+
+REBOOT VALUE:
+False

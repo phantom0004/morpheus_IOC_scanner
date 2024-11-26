@@ -1,3 +1,30 @@
+"""
+Morpheus YARA Rules Updater
+Author: Phantom0004 (Daryl Gatt)
+
+Description:
+This script handles the automated updating of YARA rule repositories for the Morpheus project. 
+It ensures that external YARA rules are always synchronized with their latest versions on GitHub, 
+providing an efficient and streamlined method to keep the rule database up to date. The script 
+validates repository versions, fetches updates when necessary, and organizes the updated rules 
+for seamless integration with Morpheus.
+
+Features:
+- Automated hash comparison to detect outdated repositories.
+- Integration with GitHub for fetching the latest YARA rules.
+- Organized handling of external YARA rule files, including cleanup of redundant files.
+- User-friendly status messages and logging for update operations.
+
+Usage:
+This updater script:
+- Checks for critical dependencies and folder structures.
+- Compares repository hashes stored in `repo_versions.txt` with the latest GitHub commits.
+- Fetches and installs updated rule sets for outdated repositories.
+- Supports multiple installation types (e.g., NanoShield Edition).
+- Ensures the Morpheus YARA rule database remains current and ready for analysis.
+
+"""
+
 import setup
 import os
 import shutil
@@ -80,8 +107,9 @@ def check_requirements():
     # Check if Git is installed and can be used
     command_output = setup.run_subprocess_command("git clone", True)
     
-    if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
-        sys.exit("[-] Git not found! Please run the 'setup.py' and ensure 'Git' is installed and configured before continuing!")
+    if hasattr(command_output, 'stderr') and command_output.stderr:
+        if any(err_msg in command_output.stderr.decode("utf-8").lower() for err_msg in ["not recognized", "not found"]):
+            sys.exit("[-] Git not found! Please run the 'setup.py' and ensure 'Git' is installed and configured before continuing!")
 
 def update_repository(repo_name, repository_link_and_names):  
     # Delete old folder

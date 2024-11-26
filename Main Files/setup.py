@@ -1,3 +1,35 @@
+"""
+Morpheus Setup Script
+Author: Phantom0004 (Daryl Gatt)
+
+Description:
+This script handles the initial setup and configuration of the Morpheus malware analysis environment. 
+It ensures all necessary dependencies, directories, and YARA rule databases are properly installed and configured. 
+The script also manages repository cloning, YARA rule extraction, and log file creation to facilitate future updates.
+
+Features:
+- Automated creation of required directories and folder structures.
+- Validation of critical dependencies, including Git, with automated installation if missing.
+- Support for multiple installation types:
+  - NanoShield Edition: Lightweight and portable with limited YARA rule coverage.
+  - Fortress Edition: Comprehensive database with extensive malware detection capabilities.
+- Efficient cloning and setup of GitHub repositories containing YARA rules.
+- Cleaning and organization of extracted YARA rules for optimal performance.
+- Logging for version tracking and seamless database updates.
+
+Usage:
+This setup script:
+- Creates a structured directory for YARA rules, including a dedicated `external_yara_rules` folder.
+- Downloads and organizes YARA rules based on user-selected installation type.
+- Generates log files for version tracking, ensuring compatibility with the database updater.
+- Guides users through dependency management and troubleshooting.
+
+Notes:
+- Ensure you have sufficient permissions to create directories and install dependencies.
+- On Windows, Git installation may require elevated privileges (UAC prompt).
+- The `version_tracking` folder and its contents are critical for the update functionality.
+"""
+
 import os
 import shutil
 import subprocess
@@ -7,7 +39,22 @@ from time import sleep
 ABSOLUTE_PATH_FLAG = False
 PROGRAM_MAIN_PATH = ""
 
-def banner():
+def art():
+    banner = """
+\t\t\t⠀⠀⠀⠀⠀⠀⢀⣠⣤⣶⣶⡞⡀⣤⣬⣴⠀⠀⢳⣶⣶⣤⣄⡀⠀⠀⠀⠀⠀⠀
+\t\t\t⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⡇⠀⢸⣿⠿⣿⡇⠀⠀⠸⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀
+\t\t\t⠀⠀⢠⡾⣫⣿⣻⣿⣽⣿⡇⠀⠈⢿⣧⡝⠟⠀⠀⢸⣿⣿⣿⣿⣿⣟⢷⣄⠀⠀
+\t\t\t⠀⢠⣯⡾⢿⣿⣿⡿⣿⣿⣿⣆⣠⣶⣿⣿⣷⣄⣰⣿⣿⣿⣿⣿⣿⣿⢷⣽⣄⠀
+\t\t\t⢠⣿⢋⠴⠋⣽⠋⡸⢱⣯⡿⣿⠏⣡⣿⣽⡏⠹⣿⣿⣿⡎⢣⠙⢿⡙⠳⡙⢿⠄
+\t\t\t⣰⢣⣃⠀⠊⠀⠀⠁⠘⠏⠁⠁⠸⣶⣿⡿⢿⡄⠈⠀⠁⠃⠈⠂⠀⠑⠠⣈⡈⣧
+\t\t\t⡏⡘⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡥⢄⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢳⢸
+\t\t\t⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣄⣸⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢨
+\t\t\t⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡴⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈
+\t\t\t⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡳⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    """
+    print("\t"+banner)
+
+def banner():    
     banner = r"""
     __  ___                 __                         _____      __            
    /  |/  /___  _________  / /_  ___  __  _______     / ___/___  / /___  ______ 
@@ -18,10 +65,12 @@ def banner():
     """
     
     print(banner)
+    art()
+    
     print("[!] Notice: Some rules may trigger antivirus alerts due to malicious patterns. This is expected.")
     if os.name != "nt": check_linux_user_permissions()
-    print("\n\n")
-
+    print("\n")
+    
 def clear_screen():
     sleep(3)
     
@@ -62,7 +111,7 @@ def check_requirements():
             if os.name != "nt":  # For non-Windows systems (Linux, macOS, etc.)
                 package_manager = check_linux_package_manager() # Get used package manager
                 
-                print("[!] Downloading Git, Running command with sudo")
+                print("[!] Downloading Git, Running command with sudo (If no output appears after a while, try re-running with sudo)")
                 if package_manager == "apt":
                     run_subprocess_command("sudo apt update && sudo apt install git -y")
                 elif package_manager == "dnf":
@@ -78,20 +127,10 @@ def check_requirements():
                 
                 # Try set environmental path to use 'git' command with no issues
                 run_subprocess_command('set "PATH=%PATH%;C:\\Program Files\\Git\\cmd"', True)  # Default path
-            
-            # Verify Installation
-            command_output = run_subprocess_command("git --version")
-            if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
-                if os.name != "nt":
-                    print("\nGit may not have been installed correctly, the program is unable to access the command. This may be due to a system error during installation.")
-                    sys.exit("[-] Install manually with this guide: 'https://git-scm.com/book/en/v2/Getting-Started-Installing-Git' to resolve this issue on your machine, or try again.")
-                else:
-                    # For windows machines, sometimes enviromental variables may fail, thus use full path
-                    global ABSOLUTE_PATH_FLAG
-                    ABSOLUTE_PATH_FLAG = True
-            else:                
-                print("[+] Successfully installed Git! Proceeding with setup . . . \n")
-                clear_screen()
+                
+                update_state_file("True")
+                sys.exit("\n\nInstallation Complete. Please fully close and re-open the terminal to restart Morpheus to apply the changes.")
+
         elif user_choice == "2":
             print("Ignoring Error, Continuing with program . . . \n")
             banner()
@@ -100,6 +139,43 @@ def check_requirements():
             sys.exit("\nProgram Aborted by User.")
     else:
         print("[✔] Git Installed on System \n")
+
+def read_state_file():
+    path = os.path.join(".assets", "state.txt")
+    
+    if not os.path.exists(path):
+        return None
+    
+    with open(path, "r") as file:
+        lines = file.readlines()
+        return lines[3].strip()  # Line 4
+
+def update_state_file(value):
+    path = os.path.join(".assets", "state.txt")
+    
+    # Exit if not found to avoid errors
+    if not os.path.exists(path):
+        return
+    
+    with open(path, "r") as file:
+        lines = file.readlines()
+        
+    lines[3] = value # Update Line 4
+    
+    with open(path, "w") as file:
+        file.writelines(lines)
+
+def verify_git_installation():
+    command_output = run_subprocess_command("git --version")
+    if any(err_msg in command_output.stderr.decode("utf-8") for err_msg in ["not recognized", "not found"]):
+        if os.name != "nt":
+            print("\nGit may not have been installed correctly, the program is unable to access the command. This may be due to a system error during installation.")
+            sys.exit("[-] Install manually with this guide: 'https://git-scm.com/book/en/v2/Getting-Started-Installing-Git' to resolve this issue on your machine, or try again.")
+        else:
+            # For windows machines, sometimes enviromental variables may fail, thus use full path
+            global ABSOLUTE_PATH_FLAG
+            ABSOLUTE_PATH_FLAG = True
+            print("[!] Problem finding Git on system, will try to use absolute path. \n")
     
 def delete_file(file_path):
     # Check the platform (OS)
@@ -152,7 +228,7 @@ def create_yara_directories():
     global PROGRAM_MAIN_PATH
     
     if "main files" not in os.getcwd().lower(): 
-        sys.exit("[-] Ensure you're in the '/Main Files' Morpheus directory before continuing! Program Aborted.")
+        sys.exit("[-] Ensure you're in the '/Main Files' Morpheus directory before continuing! Program Aborted.") # Due to path issues
     else:
         PROGRAM_MAIN_PATH = os.getcwd() # Get main program directory
           
@@ -229,8 +305,8 @@ def find_and_extract_yara_files():
     os.chdir("..")
 
 def installation_guide():
-    print("Please choose your database installation guide (Default : Fortress Edition): ")
-    print("1. Morpheus NanoShield -> [✔] Small, portable, fast. [X] Limited malware coverage.\n")
+    print("Please choose your database installation guide (Default : Fortress Edition *Recommended*): ")
+    print("1. Morpheus NanoShield -> [✔] Small, portable, fast. [X] Limited malware coverage.")
     print("2. Morpheus Fortress Edition -> [✔] Large YARA database for wide malware detection. [X] Storage-heavy, slower speeds.\n")
 
     user_choice = input("Choice (1 or 2) > ").strip()
@@ -319,7 +395,11 @@ def github_links_yara_rules():
 def main():
     # Display friendly banner and check required dependencies
     banner()
-    check_requirements()
+    # Check and install requirements once
+    if read_state_file() == "False" or not read_state_file():
+        check_requirements()
+        
+    verify_git_installation()
 
     # Create main folders
     create_yara_directories()

@@ -1,6 +1,6 @@
-yara
 yara-python
 pefile
 vt-py
 termcolor
 reportlab
+requests
