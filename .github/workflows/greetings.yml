@@ -1,0 +1,29 @@
+name: Greetings
+
+on: [pull_request_target, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: |
+          🎉 Welcome to the Morpheus project!
+
+          Thank you for opening your first issue! We’re thrilled to have you here and appreciate your contribution. If you’re new to Morpheus, don’t forget to explore our [README](https://github.com/phantom0004/morpheus_IOC_scanner/blob/main/README.md) for an overview of the project, installation steps, and usage guidelines.
+
+          If you have any questions or need help, feel free to ask. The community and maintainers are always ready to assist ❤️
+
+        pr-message: |
+          👋 Hey there!
+
+          Thanks for opening your first pull request for the Morpheus project! 🎉 Your contribution is incredibly valuable, and we’re excited to review your work. 
+
+          Before proceeding, make sure you’ve followed the steps outlined in our [README](https://github.com/phantom0004/morpheus_IOC_scanner/blob/main/README.md) to ensure everything aligns with the project’s vision and standards. If you have any questions, don’t hesitate to reach out.
+
+          Let’s keep pushing boundaries together 🚀
