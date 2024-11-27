@@ -1,4 +1,4 @@
-# Morpheus IOC Scanner 🐦‍🔥 | Redefining Advanced Malware Detection
+# Morpheus IOC Scanner | Detect and Defend Before the Threat Begins
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/868cbf26-a411-4d1a-98ee-7003b5496d8f" alt="Screenshot" style="width: 80%; height: auto;">
@@ -43,23 +43,15 @@ Introducing **Morpheus IOC Scanner** — a reliable and advanced tool for detect
   <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">
 </p>
   
-## Capturing Attacks Across the Cyber Kill Chain
+## Why use Morpheus?
 
-<p align="center">
-  <img src="https://images.blackberry.com/is/image/blackberry/cyber-kill-chain?wid=1440&fmt=png-alpha" alt="Screenshot" style="width: 80%; height: auto;">
-</p>
+Morpheus offers a range of powerful features that make it an essential tool for malware analysis. Here’s what sets it apart:
 
-Morpheus is a file-based malware scanner built to detect a wide range of malicious artifacts across several critical stages of the Cyber Kill Chain. Using a robust YARA rule set, Morpheus systematically analyzes files to uncover traces of attack strategies, ensuring that even sophisticated, staged attacks are identified:
-
-- **Reconnaissance:** Detecting evidence of preparatory steps embedded in files that may signal information-gathering activities by attackers.
-- **Exploitation:** Identifying patterns in files indicating attempts to exploit known vulnerabilities, utilizing custom YARA rules for specificity.
-- **Lateral Movement & Privilege Escalation:** Recognizing malware signatures indicative of privilege escalation scripts or code fragments designed for network propagation.
-- **Obfuscation & Anti-Forensics:** Catching malware files attempting to disguise their presence or eliminate forensic traces, signaling an effort to evade detection.
-- **Exfiltration:** Monitoring for files or embedded data configured to exfiltrate sensitive information from the target system.
-
-### Sophistication lies in this tool:
-
-Furthermore, Morpheus is equipped with advanced APT (Advanced Persistent Threat) detection, allowing it to catch even the most sophisticated attacks in real time. If the YARA ruleset isn’t enough, Morpheus seamlessly integrates with VirusTotal, one of the world’s leading platforms for malware analysis, widely trusted by security professionals. Rest easy knowing Morpheus has you covered.
+- **Blazing-Fast Analysis:** Morpheus uses dynamic multithreading to rapidly scan large file sets, delivering results in seconds without compromising accuracy.
+- **Cutting-Edge Threat Detection:** Built on a robust YARA rule set, Morpheus identifies a wide range of threats, from common malware to advanced, multi-stage attacks.
+- **Always Up-to-Date:** With seamless YARA rule updates, Morpheus ensures its detection capabilities remain effective against the latest threats.
+- **User-Friendly Interface:** Morpheus features an intuitive design, making it accessible for both experienced professionals and beginners in cybersecurity.
+- **Comprehensive Reporting:** Generate detailed, actionable reports to support malware investigations and enhance incident response workflows.
 
 Morpheus’s goal is to comprehensively address threats throughout every phase of the attack lifecycle, defend like there is no tomorrow.
 
@@ -69,21 +61,32 @@ Morpheus’s goal is to comprehensively address threats throughout every phase o
 
 ## Modes of Operation
 
-1. **VirusTotal Scan (API Key Required)**  
+### 1) **VirusTotal Scan (API Key) [_Online_]**  
    Submit a file or hash to VirusTotal for an in-depth analysis using multiple antivirus engines. This mode provides comprehensive information about potential threats using VirusTotal's extensive database.
 
-  Provides detailed output, including insights from security vendors, community feedback, and more. Limitations include API rate limiting (though the default limit is relatively high) and no results for files that haven't been previously analyzed in the VirusTotal database.
+   Provides detailed output, including insights from security vendors, community feedback, and more. Limitations include API rate limiting (though the default limit is relatively high) and no results for files that haven't been previously analyzed in the VirusTotal database.
 
-2. **Default Scan (YARA)**  
+  **Usage in Morpheus**
+
+  - Sign up at VirusTotal using the [VirusTotal Sign Up](https://www.virustotal.com).
+  - Retrieve your API key from your profile under "API Key".
+  - Run the tool, choose the VirusTotal scan option, and paste your API key when prompted.
+
+
+### 2) **Default Scan (YARA) [_Offline_]**  
    Perform a static scan using YARA rules and Pefile to identify common malicious patterns. This method can quickly flag suspicious files, including the custom detection of **KRYPT0S**, a ransomware developed by me as a proof of concept (POC).
-   
-  Provides enhanced features compared to the "VirusTotal Scan" option, including PDF output, AI integration, and access to an extensive signature database capable of detecting files not registered with VirusTotal. However, it may be prone to instability due to heavy dependencies and pre-setup requirements. While Morpheus undergoes rigorous testing, results may vary depending on the system.
+
+   Provides enhanced features compared to the "VirusTotal Scan" option, including PDF output, AI integration, and access to an extensive signature database capable of detecting files not registered with VirusTotal. However, it may be prone to instability due to heavy dependencies and pre-setup requirements. While Morpheus undergoes rigorous testing, results may vary depending on the system.
+
+  **Usage in Morpheus**
+  
+  - After following the installation to ensure all depenacies are installed, you can just run the morpheus_scanner.py and choose the default scan option to analyze files with the built-in YARA rules.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">
 </p>
 
-## Installation and Setup
+## Installation and Updating
 
 To get started with **Morpheus IOC Scanner**, follow these steps:
 
@@ -102,11 +105,7 @@ To get started with **Morpheus IOC Scanner**, follow these steps:
     python3 morpheus_scanner.py
     ```
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">
-</p>
-
-## Updating the YARA Database
+### Updating the YARA Database
 
 Periodically run the `database_updater.py` script to fetch the latest YARA rules and ensure your database is up-to-date with the latest versions from the GitHub repositories.
 
@@ -133,62 +132,31 @@ Below are error messages that can be outputted from Morpheus:
    
    This is primarily a Windows-specific error that occurs when Git is not installed. Morpheus attempts to install Git using "winget" (a Windows package manager). While this usually succeeds, the terminal may need to be restarted for the environmental variables associated with Git to take effect. If this error appears, restart the terminal and re-run Morpheus. If the issue persists, manually install Git from its official website to resolve the problem.
 
-4. **Libyara.so Error** : ```Libyara not found in your 'Yara' installation. Please try uninstall all python dependencies and re-install them.```
-   
-   This is a known and persistent issue with the "yara" library in Python. It occurs when a required shared object is missing during the installation of "yara." This problem is commonly observed on both Windows and Linux systems and has been widely documented across various forums and resources. Below are some steps to help mitigate this error:
-   - Purge all YARA libraries and files from the system, then attempt a re-installation to ensure any missing files are properly restored
-   - If on Linux, try run this command : ```sudo apt-get install libyara-dev``` for Ubuntu/Debian or ```sudo dnf install yara-devel``` if on Red Hat/CentOS/Fedora, then re-run the tool
-   - If on Linux try rebuild the local library : First run ```sudo echo "/usr/local/lib" >> /etc/ld.so.conf``` then run ```sudo ldconfig```, then re-run the tool
+4. **Git RPC Error** : ```RPC Failed ...```
 
-   If the issue persists, you can refer to a thread where the problem is discussed in detail, including alternative methods shared by others who managed to resolve it. Link to thread can be found [here](https://stackoverflow.com/questions/41255478/issue-oserror-usr-lib-libyara-so-cannot-open-shared-object-file-no-such-fi).
-
-5. **Resolving RPC Errors When Cloning Morpheus with Git**
-
-   Morpheus is a large repository containing numerous YARA rules, which can require significant bandwidth to download via Git. In cases where your Wi-Fi signal is slow or unstable, you may encounter the following error:
-   
-   ![ZNA5N](https://github.com/user-attachments/assets/85af5f13-1f69-49c2-8105-93776b3b9e03)
-
-    If you encounter this issue, try cloning Morpheus using the following method to reduce network load by downloading only the latest items in the repository.
+   Morpheus is a large repository containing numerous YARA rules, which can require significant bandwidth to download via Git. In cases where your Wi-Fi signal is slow or unstable. If you encounter this issue, try cloning Morpheus using the following method to reduce network load by downloading only the latest items in the repository.
   
     To resolve this issue, try the following: ```git clone --depth 1 https://github.com/phantom0004/morpheus_IOC_scanner```
 
-6. **VirusTotal Resource not Found** : ```The requested resource (file or URL) was not found in VirusTotal's database.```
+5. **VirusTotal Resource not Found** : ```The requested resource (file or URL) was not found in VirusTotal's database.```
 
    This error occurs when the file, URL, or hash isn't recognized by VirusTotal, as it must already exist in their database to display results. If no prior scans exist, detailed information won't be available. Sometimes, the API may return an error or no response, which could indicate an API issue rather than the absence of an entry. To resolve this, try submitting a hash (MD5, SHA-256, or SHA-1) instead of the file itself for potentially better results.
 
-Found an error which isin't documented here? Open an issue! Help Morpheus to grow <3
-
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">
 </p>
 
-## How to Get Started
-
-### For Option 1 - VirusTotal Scan:
-To use the VirusTotal scan, you will need an API key - This is *free*. 
-
-Do the following to get one:
-1. **Sign up at VirusTotal**: [VirusTotal Sign Up](https://www.virustotal.com)
-2. Retrieve your API key from your profile under "API Key".
-3. Run the tool, choose the VirusTotal scan option, and paste your API key when prompted.
-
-Still stuck? Use **Option 3** in Morpheus to view the guide on how to get the VirusTotal key, this is a detailed step-by-step guide.
-
-### For Option 2 - Default Scan:
-After following the *installation* to ensure all depenacies are installed, you can just run the **morpheus_scanner.py** and choose the default scan option to analyze files with the built-in YARA rules and Pefile. 
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">
-</p>
-
-# Practical Analysis of WannaCry Using Morpheus V2
+# Watch Morpheus V2 in Usage
 Morpheus V2 was tested by scanning an actual WannaCry sample. As demonstrated below, the tool successfully extracts key details about the file, providing valuable insights through its AI-generated verdict. Additionally, the VirusTotal API integration enhances the analysis by offering deeper insights into the sample. Finally, the results can be compiled into a PDF, enabling comprehensive documentation for further review and analysis.
 
-<div style="display: flex; gap: 10px; align-items: center;">
-  <img src="https://github.com/user-attachments/assets/f9f1526d-7980-48d5-98fd-a405922cadc0" alt="Image 1" width="500" height="450">
-  <img src="https://github.com/user-attachments/assets/3c6beb37-c3f4-4ae7-b4ee-548055cd6fb6" alt="Image 2" width="500" height="450">
-  <img src="https://github.com/user-attachments/assets/5b5d5bf3-6a23-4661-a268-1fe2e0b717da" alt="Image 3" width="2000" height="250">
-</div>
+## YARA Analysis
+![yara_scan-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/61f1b32c-fc24-4675-8a11-b9ca989029bf)
+
+## VirusTotal Analysis
+![virus_total-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/6c798e6f-8daa-4b7e-aaf4-956b0d2712f6)
+
+## Snippet of PDF Document Generated
+![pdf](https://github.com/user-attachments/assets/1cec607d-2672-4442-b44d-56182abeb630)
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">
