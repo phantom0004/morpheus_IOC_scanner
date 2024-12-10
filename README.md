@@ -162,3 +162,10 @@ Morpheus V2 was tested by scanning an actual WannaCry sample. As demonstrated be
   <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">
 </p>
 
+# Final Thoughts
+
+This project started as part of my third-year thesis, and I put a lot of time and effort into it. Over time, Morpheus has grown much bigger than my earlier projects, and it now offers many useful features.
+
+While I’ll try my best to keep it up-to-date, I’m also working on other projects, which you’ll find here as well. Because of that, Morpheus might not get as much attention as it once did. However, the code will remain available for anyone who wants to modify or improve it.
+
+If you have questions or ideas for new features, feel free to reach out. I’ll do my best to reply and, when possible, add your suggestions to the project!
