@@ -326,19 +326,22 @@ class VirusTotalAPI:
             print("[-] Unable to extract user comments, The community may have submitted nothing.\n")
             return
         
-        comment_number = 1
-        for elements in range(len(output.get("data", ""))):
-            comments = ((output.get("data", [])[elements]).get("attributes", "").get("text", ""))
-            if len(comments) > 700 : continue # Prevent Screen Clutter
-            
-            # Data Extracted
-            comments = comments.replace("[/b]", "").replace("[b]", "")
-            
-            print("\t",colored(f'> Comment {comment_number} :', attrs=['bold']))
-            print("\n".join([f"\t{line}" for line in comments.splitlines()]))
-            print() # Add spacing
-            
-            comment_number += 1
+        try:
+            comment_number = 1
+            for elements in range(len(output.get("data", ""))):
+                comments = ((output.get("data", [])[elements]).get("attributes", "").get("text", ""))
+                if len(comments) > 700 : continue # Prevent Screen Clutter
+                
+                # Data Extracted
+                comments = comments.replace("[/b]", "").replace("[b]", "")
+                
+                print("\t",colored(f'> Comment {comment_number} :', attrs=['bold']))
+                print("\n".join([f"\t{line}" for line in comments.splitlines()]))
+                print() # Add spacing
+                
+                comment_number += 1
+        except (KeyError, TypeError):
+            return
 
     # Extract behaviour analysis information
     def extract_behaviour_techniques_of_file(self):    
@@ -349,7 +352,11 @@ class VirusTotalAPI:
             print("[-] Unable to extract file behaviour data.")
             return
         
-        techniques = output.get("data", "").get("attack_techniques", [])    
+        try:
+            techniques = output.get("data", "").get("attack_techniques", [])    
+        except (KeyError, TypeError):
+            print("[-] Unable to extract MITRE Techniques")
+            return
         
         for index, technique in enumerate(techniques):   
             if index == 15: break
@@ -383,8 +390,12 @@ class VirusTotalAPI:
             return
         
         # Extracting the subject alternative names from the last_https_certificate
-        last_https_certificate = output.get("data", {}).get("attributes", {}).get("last_https_certificate", {})
-        subject_alternative_names = last_https_certificate.get("extensions", {}).get("subject_alternative_name", [])
+        try:
+            last_https_certificate = output.get("data", {}).get("attributes", {}).get("last_https_certificate", {})
+            subject_alternative_names = last_https_certificate.get("extensions", {}).get("subject_alternative_name", [])
+        except (KeyError, TypeError):
+            print("[-] No subject alternative names found.")
+            return
         
         if subject_alternative_names:
             for index , name in enumerate(subject_alternative_names):
