@@ -1,4 +1,6 @@
-// Due to the very extensive nature of detecting persistance, below are just a few for demonstration purposes.
+// Due to the very extensive nature of detecting persistance and anti-forensic techniques, below are the main:
+
+// WINDOWS SYSTEMS
 rule windows_persistance
 {
     meta:
@@ -26,88 +28,9 @@ rule windows_persistance
         $winlogon_userinit_key = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\Userinit"
         $winlogon_shell_key = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\Shell"
 
-        // Explorer Current User
-        $hkcu_currentuser_explorer_user_shell_key = "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders"
-        $hkcu_currentuser_explorer_shell_key = "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders"
-
-        // Explorer Local Machine
-        $hklm_localmachine_explorer_shell_key = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders"
-        $hklm_localmachine_explorer_user_shell_key = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders"
-
     condition:
         any of them
 }
-
-// Due to the very extensive nature of detecting persistance, below are just a few for demonstration purposes.
-rule linux_persistance
-{
-    meta:
-        author = "Daryl Gatt"
-        description = "Detects common techniques for linux persistance."
-        credits = "https://hadess.io/the-art-of-linux-persistence/"
-        date = "2024-09-23"
-    
-    strings:
-        // Cron Jobs (In /ect directory)
-        $crontab_ect_directory_1 = "/etc/crontab"
-        $crontab_ect_directory_2 = "/etc/cron.d/*"
-
-        // Cron Jobs (In /var directory)
-        $crontab_var_directory = "/var/spool/cron/crontab/*"
-
-        // Systemwide shell startup script
-        $shell_systemwide_bashrc = "/etc/bash.bashrc"
-
-        // Systemwide shell logout script
-        $shell_systemwide_logout = "/etc/bash_logout"
-
-        // User-specific startup script
-        $shell_user_bashrc = "~/.bashrc"
-
-        // User-specific login scripts (executed in order of precedence)
-        $shell_user_profile = "~/.bash_profile"
-        $shell_user_bash_login = "~/.bash_login"
-        $shell_user_profile_alt = "~/.profile"
-
-        // User-specific logout scripts
-        $shell_user_logout = "~/.bash_logout"
-        $shell_user_cleanup_logout = "~/.bash_logout"
-
-        // Systemwide login shell script
-        $shell_systemwide_profile = "/etc/profile"
-
-        // Systemwide profile directory for additional scripts
-        $shell_systemwide_profile_d = "/etc/profile.d"
-
-        // SSH Keys
-        $ssh_authorized_keys = "~/.ssh/authorized_keys"
-
-    condition:
-        any of them
-}
-
-rule probability_of_shellcode
-{
-    meta:
-        author = "nex"
-        description = "Matched shellcode byte patterns"
-        modified = "Glenn Edwards (@hiddenillusion)"
-    strings:
-        $s0 = { 64 8b 64 }
-        $s1 = { 64 a1 30 }
-        $s2 = { 64 8b 15 30 }
-        $s3 = { 64 8b 35 30 }
-        $s4 = { 55 8b ec 83 c4 }
-        $s5 = { 55 8b ec 81 ec }
-        $s6 = { 55 8b ec e8 }
-        $s7 = { 55 8b ec e9 }
-
-    condition:
-        for any of ($s*) : ($ at entrypoint)	
-}
-
-
-// Anti Forensic Techniques - Windows Machines :
 
 rule terminal_history_actions
 {
@@ -121,15 +44,12 @@ rule terminal_history_actions
     strings:
         // Linux based history commands
         $clear_linux_terminal_history = "history -c"
-        $delete_linux_terminal_history = "rm ~/.bash_history"
-        $temp_disable_linux_terminal_history = "set +o history"
-        $append_linux_terminal_history = "history -a"
         $override_linux_terminal_history = "cat /dev/null > ~/.bash_history"
 
         // Windows based history commands/Info
         $view_windows_history = "doskey /history"
         $powershell_history_save_path = "%userprofile%AppDataRoamingMicrosoftWindowsPowerShellPSReadline"
-    
+
     condition:
         any of them
 }
@@ -163,20 +83,6 @@ rule cipher_secure_delete
         any of them
 }
 
-rule disable_UsnJrnl
-{
-    meta:
-        author = "Daryl Gatt"
-        description = "The USN change journal provides a persistent log of all changes made to files on the volume, this can be manipulated."
-        date = "2024-09-25"
-
-    strings:
-        $disable_usn_journal_command = "fsutil usn deletejournal"
-    
-    condition:
-        any of them
-}
-
 rule event_log_manipulation
 {
     meta:
@@ -194,4 +100,66 @@ rule event_log_manipulation
     
     condition:
         any of them
+}
+
+rule disable_UsnJrnl
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "The USN change journal provides a persistent log of all changes made to files on the volume, this can be manipulated."
+        date = "2024-09-25"
+
+    strings:
+        $disable_usn_journal_command = "fsutil usn deletejournal"
+    
+    condition:
+        any of them
+}
+
+// LINUX SYSTEMS
+rule linux_persistance
+{
+    meta:
+        author = "Daryl Gatt"
+        description = "Detects common techniques for linux persistance."
+        credits = "https://hadess.io/the-art-of-linux-persistence/"
+        date = "2024-09-23"
+
+    strings:
+        // Cron Jobs (In /etc directory)
+        $crontab_ect_directory_1 = "/etc/crontab"
+        $crontab_ect_directory_2 = "/etc/cron.d/*"
+
+        // User-specific startup script
+        $shell_user_bashrc = "~/.bashrc"
+
+        // Systemwide login shell script
+        $shell_systemwide_profile = "/etc/profile"
+
+        // SSH Keys
+        $ssh_authorized_keys = "~/.ssh/authorized_keys"
+
+    condition:
+        any of them
+}
+
+// GENERAL
+rule probability_of_shellcode
+{
+    meta:
+        author = "nex"
+        description = "Matched shellcode byte patterns"
+        modified = "Glenn Edwards (@hiddenillusion)"
+    strings:
+        $s0 = { 64 8b 64 }
+        $s1 = { 64 a1 30 }
+        $s2 = { 64 8b 15 30 }
+        $s3 = { 64 8b 35 30 }
+        $s4 = { 55 8b ec 83 c4 }
+        $s5 = { 55 8b ec 81 ec }
+        $s6 = { 55 8b ec e8 }
+        $s7 = { 55 8b ec e9 }
+
+    condition:
+        for any of ($s*) : ($ at entrypoint)	
 }
