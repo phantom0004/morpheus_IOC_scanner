@@ -31,6 +31,51 @@ def identify_matches(rule_object, data):
     else:
         return rule_object.match(data, timeout=60)
 
+# Parse match and output details
+def process_matches(matches):
+    """
+        Parses and outputs details of YARA matches.
+
+        Args:
+            matches (list): A list of match objects returned from a YARA scan.
+                Each match object represents a rule that was triggered.
+
+        Returns:
+            None: This function directly prints the details of each match to the console.
+    """
+    
+    for match in matches:
+        print(colored(f"MATCHED RULE NAME > {match.rule if match.rule else 'No Rule Name Found'}", attrs=["bold"]))
+
+        # Rule Tags
+        if match.tags:
+            print(f"RULE TAGS : {', '.join(match.tags)}")
+        else:
+            log_message("info", "No Rule Tags Found", "yellow")
+
+        # Rule Metadata
+        if match.meta:
+            print("RULE METADATA : ")
+            for key, value in match.meta.items():
+                print(f"\t - {key.capitalize()} : {value}")
+        else:
+            log_message("info", "No Rule Metadata Found", "yellow")
+
+        if match.strings:
+            print(f"RULE STRINGS : ")
+            for string in match.strings:
+                print(f"\t - {string}")
+        else:
+            log_message("info", "No Rule Strings Found", "yellow")
+
+        # Rule Namespace
+        if hasattr(match, 'namespace'):
+            print(f"RULE NAMESPACE : {match.namespace}")
+        else:
+            log_message("info", "No Rule Namespace Found", "yellow")
+
+        print("\n------\n")
+
 # Checks if value is in PID format
 def is_pid(value):
     """
@@ -191,7 +236,7 @@ try:
 except Exception as error:
     exit(log_message("error", f"Exception Raised on Input : {error}.", "red"))
 
-print(colored("\n====== LOGS ======", attrs=["bold"]))
+print(colored("\n====== COMPILATION LOGS ======", attrs=["bold"]))
 
 is_pid(test_data) # Check if a process is being analyzed
 validation_output = validate_data([yara_rule_path, test_data] if not IS_PID else [yara_rule_path, int(test_data)])
@@ -223,6 +268,10 @@ matches = handle_yara_exceptions(identify_matches, compiled_yara_rules, test_dat
 end_time = time.time() - start_time
 
 if not matches:
-    log_message("info", "No matches found for current test file.", "yellow")
+    # Stop execution if no matches are found
+    exit(log_message("info", "No matches found for current test file.", "yellow"))
 else:
     log_message("info", f"{len(matches)} found for current test file - Took {end_time:.7f} seconds to execute", "yellow")
+
+print(colored("\n====== MATCH LOGS ======", attrs=["bold"]))
+process_matches(matches)
