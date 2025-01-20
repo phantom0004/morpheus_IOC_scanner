@@ -5,16 +5,31 @@ import yara
 import os
 import psutil
 import re
+import time
 from termcolor import colored
 
 IS_PID = False
 
 # Identifies any matches based on compiled rules
 def identify_matches(rule_object, data):
+    """
+        Identifies matches based on compiled rules and the provided data.
+
+        Args:
+            rule_object: An object containing compiled rules with a `match` method.
+            data: The input data to be matched. If `IS_PID` is True, this is treated as a process ID (PID).
+
+        Returns:
+            bool | list | None:
+                - The result of the `rule_object.match()` method:
+                    - If `IS_PID` is True, matches are checked against the PID.
+                    - If `IS_PID` is False, matches are checked against the provided data.
+    """
+
     if IS_PID:
-        return None
+        return rule_object.match(pid=int(data[1]), timeout=60)
     else:
-        return rule_object.match(data)
+        return rule_object.match(data, timeout=60)
 
 # Checks if value is in PID format
 def is_pid(value):
@@ -102,26 +117,30 @@ def compile_yara_rules(file_path):
     return compiled_rule
 
 # Validate YARA operations
-def handle_yara_exceptions(operation, argument):
+def handle_yara_exceptions(operation, *args):
     """
-    Handles exceptions raised during YARA operations.
+        Handles exceptions raised during YARA operations.
 
-    Args:
-        operation (callable): The YARA-related function to execute.
-        argument: The argument to pass to the operation.
+        Args:
+            operation (callable): The YARA-related function to execute.
+            *args: Variable-length positional arguments to pass to the `operation`.
 
-    Returns:
-        Any: The result of the operation, or None if an exception is raised.
+        Returns:
+            Any:
+                - The result of the `operation` if it executes successfully.
+                - None if an exception is raised, with the error logged appropriately.
     """
     
     try:
-        return operation(argument)
+        return operation(*args)
     except yara.WarningError as error:
         log_message("error", f"YARA Warning Exception Raised : {error}.", "red")
     except yara.SyntaxError as error:
         log_message("error", f"YARA Syntax Exception Raised : {error}.", "red")
     except yara.Error as error:
         log_message("error", f"General YARA Exception Raised : {error}.", "red")
+    except TimeoutError as error:
+        log_message("error", f"Timeout Exception Raised : {error}.", "red")
     
     return None
 
@@ -172,6 +191,8 @@ try:
 except Exception as error:
     exit(log_message("error", f"Exception Raised on Input : {error}.", "red"))
 
+print(colored("\n====== LOGS ======", attrs=["bold"]))
+
 is_pid(test_data) # Check if a process is being analyzed
 validation_output = validate_data([yara_rule_path, test_data] if not IS_PID else [yara_rule_path, int(test_data)])
     
@@ -180,6 +201,8 @@ if validation_output:
         exit(log_message("error", f"Path '{validation_output}' value could not be found. Please enter the correct file/folder path.", "red"))
     else:
         exit(log_message("error", f"PID '{validation_output}' could not be found. Please enter a valid PID.", "red"))
+else:
+    log_message("success", "All paths are valid." if not IS_PID else "PID is valid", "green")
 
 # Extract all YARA files if path is a directory, else use inputted path
 rules_path = get_yara_files(yara_rule_path)
@@ -194,5 +217,12 @@ if rules_path:
 else:
     # YARA rules path is invalid
     exit(log_message("error", f"Invalid YARA rule path: '{yara_rule_path}'. Please provide a valid file or directory.", "red"))
-    
-# matches = identify_matches(compiled_yara_rules, test_data)
+
+start_time = time.time()    
+matches = handle_yara_exceptions(identify_matches, compiled_yara_rules, test_data)
+end_time = time.time() - start_time
+
+if not matches:
+    log_message("info", "No matches found for current test file.", "yellow")
+else:
+    log_message("info", f"{len(matches)} found for current test file - Took {end_time:.7f} seconds to execute", "yellow")
