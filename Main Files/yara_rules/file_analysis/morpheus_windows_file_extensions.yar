@@ -3,7 +3,10 @@ import "pe"
 rule windows_portable_executable_rule
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "windows, portable executable, file format"
+        license = "MIT"
         description = "Checks if file is of PE format."
         date = "2024-09-22"
     
@@ -14,7 +17,10 @@ rule windows_portable_executable_rule
 rule windows_executable_rule
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "windows, executable, file format"
+        license = "MIT"
         description = "Detects other not so common executable files."
         date = "2024-09-12"
 
@@ -29,7 +35,10 @@ rule windows_executable_rule
 rule windows_script_rule
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "windows, scripts, file format"
+        license = "MIT"
         description = "Detects windows related scripts."
         date = "2024-09-13"
 
@@ -63,7 +72,10 @@ rule windows_script_rule
 rule office_extension_rule
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "office, file format, microsoft"
+        license = "MIT"
         description = "Checks if the file is a Microsoft Office document."
         date = "2024-09-12"
 

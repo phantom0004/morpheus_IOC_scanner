@@ -1,7 +1,10 @@
 rule macos_executable_and_app_detection
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "macOS, Mach-O, application bundles, disk images, packages"
+        license = "MIT"
         description = "Detects common macOS executable files and application bundles."
         date = "2024-09-17"
 
@@ -26,7 +29,10 @@ rule macos_executable_and_app_detection
 rule macos_dmg_and_pkg_detection
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "macOS, disk image, package installer, DMG, PKG"
+        license = "MIT"
         description = "Detects macOS disk images (.dmg) and package installers (.pkg)."
         date = "2024-09-17"
 
@@ -44,7 +50,10 @@ rule macos_dmg_and_pkg_detection
 rule macos_system_file_detection
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "macOS, system files, .plist, resource forks"
+        license = "MIT"
         description = "Detects macOS system files such as .plist and resource forks."
         date = "2024-09-17"
 
@@ -62,7 +71,10 @@ rule macos_system_file_detection
 rule macos_common_application_files
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "macOS, application, frameworks, bundles, extensions"
+        license = "MIT"
         description = "Detects common macOS application-related files such as frameworks, bundles, and extensions."
         date = "2024-09-17"
 

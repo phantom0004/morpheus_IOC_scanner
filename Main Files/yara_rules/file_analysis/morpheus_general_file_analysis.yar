@@ -1,7 +1,10 @@
 rule image_extension_rule
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "file extension, image, picture"
+        license = "MIT"
         description = "Checks if the file has an image format."
         date = "2024-09-12"
 
@@ -22,7 +25,10 @@ rule image_extension_rule
 rule video_extension_rule
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "video extension, video"
+        license = "MIT"
         description = "Checks if the file has a video format."
         date = "2024-09-13"
 
@@ -44,7 +50,10 @@ rule video_extension_rule
 rule common_web_file_strings
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "web extension, web"
+        license = "MIT"
         description = "Detects common web-related files based on their content."
         date = "2024-09-13"
 
@@ -84,7 +93,10 @@ rule common_web_file_strings
 rule commmon_zip_extensions
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "zip extension, zip, archive"
+        license = "MIT"
         description = "Detects common zip extensions."
         date = "2024-09-13"
     
@@ -109,7 +121,10 @@ rule commmon_zip_extensions
 rule simple_scripting_languages_detection
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "scripting, language, detection, shebang"
+        license = "MIT"
         description = "Detects common scripting languages, focuses on common scripting languages."
         date = "2024-09-23"
 
@@ -150,7 +165,10 @@ rule simple_scripting_languages_detection
 rule detect_database_files
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "database, files, configuration, detection"
+        license = "MIT"
         description = "Detects various database-related files and configurations from multiple database systems."
         date = "2024-09-23"
 
@@ -197,7 +215,10 @@ rule detect_database_files
 rule detect_common_log_files
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "log files, detection, system logs"
+        license = "MIT"
         description = "Detects commonly used log files across various systems and applications."
         date = "2024-09-23"
 
@@ -225,7 +246,10 @@ rule detect_common_log_files
 rule detect_android_files
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "Android, APK, DEX, resources, OBB"
+        license = "MIT"
         description = "Detects common Android application and resource files."
         date = "2024-09-23"
 
@@ -249,7 +273,10 @@ rule detect_android_files
 rule detect_network_files
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "network, configuration, files"
+        license = "MIT"
         description = "Detects common network configuration files."
         date = "2024-09-23"
 

@@ -3,7 +3,10 @@ import "pe"
 rule sensitive_windows_file_access
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "file access, windows, sensitive files"
+        license = "MIT"
         credits = "Various online exploitation resources"
         description = "Detects access to additional sensitive Windows system paths such as shadow copies, boot files, and common malware targets."
         date = "2024-09-18"
@@ -68,7 +71,10 @@ rule sensitive_windows_file_access
 rule sensitive_linux_file_access
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "file access, linux, sensitive files"
+        license = "MIT"
         credits = "Various online exploitation resources"
         description = "Detects access to sensitive Linux system paths such as password files, SSH keys, logs, and common malware targets."
         date = "2024-09-18"
@@ -150,7 +156,10 @@ rule sensitive_linux_file_access
 rule macos_sensitive_file_access
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "file access, macos, sensitive files"
+        license = "MIT"
         credits = "Various online exploitation resources"
         description = "Detects access to sensitive macOS-specific system paths, configurations, logs, and security files."
         date = "2024-09-17"

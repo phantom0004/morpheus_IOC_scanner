@@ -2,7 +2,10 @@
 rule windows_persistance
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "windows, persistance"
+        license = "MIT"
         description = "Detects access to common registry keys used for windows persistance."
         credits = "https://www.cyborgsecurity.com/cyborg-labs/hunting-for-persistence-registry-run-keys-startup-folder/"
         date = "2024-09-23"
@@ -42,7 +45,10 @@ rule windows_persistance
 rule linux_persistance
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "linux, persistance"
+        license = "MIT"
         description = "Detects common techniques for linux persistance."
         credits = "https://hadess.io/the-art-of-linux-persistence/"
         date = "2024-09-23"
@@ -112,7 +118,10 @@ rule probability_of_shellcode
 rule terminal_history_actions
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "windows, linux, anti-forensic"
+        license = "MIT"
         description = "Detects terminal based actions which can indicate anti-forensic attempts."
         linux_credits = "https://www.redswitches.com/blog/linux-history-command/"
         windows_credits = "https://www.partitionwizard.com/partitionmagic/cmd-history.html"
@@ -137,7 +146,10 @@ rule terminal_history_actions
 rule vssadmin_shadow_delete
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "windows, anti-forensic"
+        license = "MIT"
         description = "Attempts the deletion of snapshots in windows systems, potentially indicative of Ransomware"
         date = "2024-09-25"
 
@@ -152,7 +164,10 @@ rule vssadmin_shadow_delete
 rule cipher_secure_delete
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "secure delete, windows, anti-forensic"
+        license = "MIT"
         description = "This command securely erases the free space on the specified drive by overwriting it multiple times."
         date = "2024-09-25"
 
@@ -166,7 +181,10 @@ rule cipher_secure_delete
 rule disable_UsnJrnl
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "ant-forensic, windows, usn journal"
+        license = "MIT"
         description = "The USN change journal provides a persistent log of all changes made to files on the volume, this can be manipulated."
         date = "2024-09-25"
 
@@ -180,8 +198,11 @@ rule disable_UsnJrnl
 rule event_log_manipulation
 {
     meta:
-        author = "Daryl Gatt"
-        description = ""
+        author = "Morpheus"
+        version = "1.0"
+        tags = "windows, anti-forensic, event log, wevtutil"
+        license = "MIT"
+        description = "Attempts to clear the event logs in windows systems, potentially indicative of anti-forensic activity."
         date = "2024-09-25"
     
     strings:

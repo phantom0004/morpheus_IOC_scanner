@@ -1,7 +1,10 @@
 rule ip_address_find
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "IP address, detection, network, IPv4, IPv6"
+        license = "MIT"
         description = "Identifies any IPv4 or/and IPv6 addresses, with optional port numbers."
         date = "2024-09-13"
 
@@ -21,7 +24,10 @@ rule ip_address_find
 rule mac_address_find
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "MAC address, detection, network, hardware, Ethernet"
+        license = "MIT"
         description = "Identifies any MAC addresses."
         date = "2024-09-16"
     
@@ -36,7 +42,10 @@ rule mac_address_find
 rule email_address_find
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "email address, detection, email, phishing"
+        license = "MIT"
         description = "Identifies any email addresses."
         date = "2024-09-16"
 
@@ -51,7 +60,10 @@ rule email_address_find
 rule url_or_domain_find
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "URL, domain, detection, phishing, malicious"
+        license = "MIT"
         description = "Identifies URL's or domains that could be for malicious intent or legitimate usage."
         date = "2024-09-16"
 
@@ -66,7 +78,10 @@ rule url_or_domain_find
 rule file_paths
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "file paths, detection, hardcoding, sensitive data"
+        license = "MIT"
         description = "Identify hardcoded file paths."
         date = "2024-09-16"
 
@@ -82,7 +97,10 @@ rule file_paths
 rule identify_sensitive_key_terms
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "sensitive data, keywords, patterns, passwords, financial information"
+        license = "MIT"
         description = "Identify keywords and patterns that are indicative of potential sensitive data."
         date = "2024-09-16"
 
@@ -113,7 +131,10 @@ rule identify_sensitive_key_terms
 rule syslog_detection
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "syslog, detection, log, monitoring, security"
+        license = "MIT"
         description = "Detects common syslog patterns with and without an ID."
         date = "2024-09-23"
 
@@ -128,7 +149,10 @@ rule syslog_detection
 rule telegram_service_connectivity
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "telegram, detection, C2, communication, network"
+        license = "MIT"
         description = "Detects connectivity with telegram, which often could indicate the usage of a C2 server."
         credits = "https://www.slideshare.net/slideshow/cb19-leveraging-yara-rules-to-hunt-for-abused-telegram-accounts-by-asaf-aprozper/204322978"
         reference = "github.com/3pun0x/repotele"
@@ -145,7 +169,10 @@ rule telegram_service_connectivity
 rule discord_service_connectivity
 {
     meta:
-        author = "Daryl Gatt"
+        author = "Morpheus"
+        version = "1.0"
+        tags = "discord, detection, C2, communication, network"
+        license = "MIT"
         description = "Detects Discord-related URLs."
         date = "2024-09-23"
 
