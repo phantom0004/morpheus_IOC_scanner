@@ -1,3 +1,13 @@
+/*
+   YARA Rule Set
+   Author: Morpheus
+   Date: 2025-01-27
+   Identifier: Persistence, Anti-Forensic Techniques, and Shellcode Detection
+   Reference: Custom Rules by Morpheus
+*/
+
+/* Rule Set ----------------------------------------------------------------- */
+
 // Due to the very extensive nature of detecting persistance, below are just a few for demonstration purposes.
 rule windows_persistance
 {

@@ -1,3 +1,13 @@
+/*
+   YARA Rule Set
+   Author: Morpheus
+   Date: 2025-01-27
+   Identifier: macOS Executable, System, and Application File Detection
+   Reference: Custom Rules by Morpheus
+*/
+
+/* Rule Set ----------------------------------------------------------------- */
+
 rule macos_executable_and_app_detection
 {
     meta:

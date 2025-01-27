@@ -1,3 +1,13 @@
+/*
+   YARA Rule Set
+   Author: Morpheus
+   Date: 2025-01-27
+   Identifier: Windows and Office File Format Detection
+   Reference: Custom Rules by Morpheus
+*/
+
+/* Rule Set ----------------------------------------------------------------- */
+
 import "pe"
 
 rule windows_portable_executable_rule

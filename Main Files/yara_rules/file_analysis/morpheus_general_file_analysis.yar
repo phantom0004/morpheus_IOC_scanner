@@ -1,3 +1,13 @@
+/*
+   YARA Rule Set
+   Author: Morpheus
+   Date: 2025-01-27
+   Identifier: Detection of File Types, Logs, Configurations, and Network Resources
+   Reference: Custom Rules by Morpheus
+*/
+
+/* Rule Set ----------------------------------------------------------------- */
+
 rule image_extension_rule
 {
     meta:

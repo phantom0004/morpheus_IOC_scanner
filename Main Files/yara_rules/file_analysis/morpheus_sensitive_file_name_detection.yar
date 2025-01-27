@@ -1,3 +1,13 @@
+/*
+   YARA Rule Set
+   Author: Morpheus
+   Date: 2025-01-27
+   Identifier: Sensitive File Access Detection for Windows, Linux, and macOS
+   Reference: Custom Rules by Morpheus
+*/
+
+/* Rule Set ----------------------------------------------------------------- */
+
 import "pe"
 
 rule sensitive_windows_file_access
