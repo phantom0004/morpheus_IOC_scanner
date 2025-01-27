@@ -22,6 +22,7 @@ import os
 from time import sleep
 from datetime import datetime
 from requests import post
+from zipfile import ZipFile 
 
 try:
     from termcolor import colored
@@ -35,6 +36,8 @@ try:
     from modules import ascii_art
 except ModuleNotFoundError:
     exit("Custom modules not found. Please ensure you have the 'yara_rules.py', 'pe_analysis.py', 'virus_total.py' and 'AnalysisReportPDF.py'!")
+
+DEFAULT_RULE_PATH = os.path.join("yara_rules", "external_yara_rules", "default_built_in_rules")
 
 # Program Intro Banner
 def startup_banner():
@@ -238,7 +241,7 @@ def load_file(user_path):
 def default_yara_scan():
     if not os.path.exists(os.path.join(os.getcwd(), "yara_rules", "external_yara_rules")):
         exit(colored("[-] Missing Yara Database, Setup.py has not been ran yet! Please run the script before running Morpheus.", "red"))
-    elif os.path.exists(os.path.join(os.getcwd(), "yara_rules", "external_yara_rules", "default_built_in_rules")):
+    elif os.path.exists(DEFAULT_RULE_PATH):
         print(colored("[!] Using Default Yara Rules. Results may be limited - Consider running 'setup.py'. \n", "yellow"))
     
     # Handle file data
@@ -379,6 +382,19 @@ def custom_message(message, custom_message="", time=None):
     print(colored(full_message, attrs=["bold"]))
     print("-" * len(full_message))
 
+# Extract zipped Yara files and delete zipped file
+def extract_all_zip_contents():
+    zipped_path = DEFAULT_RULE_PATH + ".zip"
+    
+    if os.path.exists(zipped_path):
+        with ZipFile(zipped_path, 'r') as zipped_file: 
+            zipped_file.extractall(path=os.path.join("yara_rules","external_yara_rules")) 
+
+        try:
+            os.remove(zipped_path)
+        except PermissionError:
+            print(colored("[-] Permission Error - Unable to delete rule zipped file. Please delete manually.", "red"))
+
 # Handle menu user option
 def handle_user_arguments():
     try:
@@ -392,6 +408,7 @@ def handle_user_arguments():
     if usr_input == "1":
         virus_total_scan()
     elif usr_input == "2":
+        extract_all_zip_contents()
         default_yara_scan()
     elif usr_input == "3":
         display_API_help()
