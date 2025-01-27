@@ -29,40 +29,14 @@ try:
     from modules import virus_total
     from modules import yara_analysis
     from modules import AnalysisReportPDF
+    from modules import ascii_art
 except ModuleNotFoundError:
     exit("Custom modules not found. Please ensure you have the 'yara_rules.py', 'pe_analysis.py', 'virus_total.py' and 'AnalysisReportPDF.py'!")
 
 # Program Intro Banner
-def intro_banner():
-    banner = colored("""
-          Into the Morpheous Domain
-             Embrace the Unknown
-                     
-   .:'                                  `:.                                    
-  ::'                                    `::                                   
- :: :.                                 .: ::                                  
-  `:. `:.             .             .:'  .:'                                   
-   `::. `::           !           ::' .::'                                     
-       `::.`::.    .' ! `.    .::'.::'                                         
-         `:.  `::::'':!:``::::'   ::'                                          
-         :'*:::.  .:' ! `:.  .:::*`:                                           
-        :: HHH::.   ` ! '   .::HHH ::                                          
-       ::: `H TH::.  `!'  .::HT H' :::                                         
-       ::..  `THHH:`:   :':HHHT'  ..::                                         
-       `::      `T: `. .' :T'      ::'                                         
-         `:. .   :         :   . .:'                                           
-           `::'               `::'                                             
-             :'  .`.  .  .'.  `:                                               
-             :' ::.       .:: `:                                               
-             :' `:::     :::' `:                                               
-              `.  ``     ''  .'                                                
-               :`...........':                                                 
-               ` :`.     .': '                                                 
-                `:  `---'  :'
+def startup_banner():
+    banner = colored(ascii_art.morpheus_banner(), "red", attrs=["bold"])  
     
-               - Morpheus V2 -
-    """, "red", attrs=["bold"])
-        
     options = """
 Please choose an option:
 
@@ -77,40 +51,6 @@ Please choose an option:
 """
     print(banner+options)
 
-# Banner when scanning with YARA
-def scan_banner():
-    banner = colored(r"""
-   (  )   /\   _                 (     
-    \ |  (  \ ( \.(               )                      _____
-  \  \ \  `  `   ) \             (  ___                 / _   \
- (_`    \+   . x  ( .\            \/   \____-----------/ (o)   \_
-- .-               \+  ;          (  O                           \____
-Feel the blaze of Morpheus        \_____________  `              \  /
-(__                +- .( -'.- <. - _  VVVVVVV VV V\                 \/
-(_____            ._._: <_ - <- _  (--  _AAAAAAA__A_/                  |
-  .    /./.+-  . .- /  +--  - .     \______________//_              \_______
-  (__ ' /x  / x _/ (                                  \___'          \     /
- , x / ( '  . / .  /                                      |           \   /
-    /  /  _/ /    +                                      /              \/
-   '  (__/                                             /                  \
-    """, "red", attrs=["bold"])
-    
-    print(banner+"\n")
-
-# Custom virustotal banner when using their API
-def vt_banner():
-    banner = colored(r"""
- _    ___                ______      __        __   ___    ____  ____
-| |  / (_)______  ______/_  __/___  / /_____ _/ /  /   |  / __ \/  _/
-| | / / / ___/ / / / ___// / / __ \/ __/ __ `/ /  / /| | / /_/ // /  
-| |/ / / /  / /_/ (__  )/ / / /_/ / /_/ /_/ / /  / ___ |/ ____// /   
-|___/_/_/   \__,_/____//_/  \____/\__/\__,_/_/  /_/  |_/_/   /___/  
- 
-                    Powered by Morpheus V2                                               
-    """, "cyan", attrs=["bold"])
-    
-    print(banner+"\n")
-
 # Redirects user to another menu based on choice
 def menu_switch(choice):
     print(f"Redirecting you to choice {choice} ...")
@@ -118,9 +58,11 @@ def menu_switch(choice):
     
     os.system("cls") if os.name == "nt" else os.system("clear")
     if choice == "1":
-        vt_banner()
+        print(colored(ascii_art.virustotal_banner(), "cyan", attrs=["bold"]))
     else:
-        scan_banner()
+        print(colored(ascii_art.scan_banner(), "red", attrs=["bold"]))
+    
+    print("\n")
 
 # Start virus total scan using module
 def virus_total_scan():
@@ -453,7 +395,7 @@ def handle_user_arguments():
 
 # Main function
 def main():
-    intro_banner()
+    startup_banner()
     handle_user_arguments()
 
 if __name__ == "__main__":
