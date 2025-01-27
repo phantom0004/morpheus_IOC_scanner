@@ -3,31 +3,18 @@ Morpheus Setup Script
 Author: Phantom0004 (Daryl Gatt)
 
 Description:
-This script handles the initial setup and configuration of the Morpheus malware analysis environment. 
-It ensures all necessary dependencies, directories, and YARA rule databases are properly installed and configured. 
-The script also manages repository cloning, YARA rule extraction, and log file creation to facilitate future updates.
+This script initializes the Morpheus malware analysis environment by managing 
+dependencies, directory structure, and YARA rule configuration. It supports 
+multiple installation types, including lightweight and comprehensive editions.
 
 Features:
-- Automated creation of required directories and folder structures.
-- Validation of critical dependencies, including Git, with automated installation if missing.
-- Support for multiple installation types:
-  - NanoShield Edition: Lightweight and portable with limited YARA rule coverage.
-  - Fortress Edition: Comprehensive database with extensive malware detection capabilities.
-- Efficient cloning and setup of GitHub repositories containing YARA rules.
-- Cleaning and organization of extracted YARA rules for optimal performance.
-- Logging for version tracking and seamless database updates.
+- Automated directory and dependency setup.
+- Repository cloning and YARA rule organization.
+- Version tracking for seamless updates.
 
 Usage:
-This setup script:
-- Creates a structured directory for YARA rules, including a dedicated `external_yara_rules` folder.
-- Downloads and organizes YARA rules based on user-selected installation type.
-- Generates log files for version tracking, ensuring compatibility with the database updater.
-- Guides users through dependency management and troubleshooting.
-
-Notes:
-- Ensure you have sufficient permissions to create directories and install dependencies.
-- On Windows, Git installation may require elevated privileges (UAC prompt).
-- The `version_tracking` folder and its contents are critical for the update functionality.
+- Run the script to configure the environment and download required YARA rules.
+- Ensure sufficient permissions for directory creation and installations.
 """
 
 import os

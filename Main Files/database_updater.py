@@ -3,26 +3,20 @@ Morpheus YARA Rules Updater
 Author: Phantom0004 (Daryl Gatt)
 
 Description:
-This script handles the automated updating of YARA rule repositories for the Morpheus project. 
-It ensures that external YARA rules are always synchronized with their latest versions on GitHub, 
-providing an efficient and streamlined method to keep the rule database up to date. The script 
-validates repository versions, fetches updates when necessary, and organizes the updated rules 
-for seamless integration with Morpheus.
+Automates the updating of YARA rule repositories for the Morpheus project, ensuring the 
+rule database stays current by synchronizing with the latest GitHub versions.
 
 Features:
-- Automated hash comparison to detect outdated repositories.
-- Integration with GitHub for fetching the latest YARA rules.
-- Organized handling of external YARA rule files, including cleanup of redundant files.
-- User-friendly status messages and logging for update operations.
+- Hash comparison to detect outdated repositories.
+- GitHub integration for fetching updates.
+- Cleanup and organization of redundant files.
+- User-friendly logging and status messages.
 
 Usage:
-This updater script:
-- Checks for critical dependencies and folder structures.
-- Compares repository hashes stored in `repo_versions.txt` with the latest GitHub commits.
-- Fetches and installs updated rule sets for outdated repositories.
+- Validates dependencies and folder structures.
+- Compares stored repository hashes (`repo_versions.txt`) with GitHub commits.
+- Fetches and installs updated rules for outdated repositories.
 - Supports multiple installation types (e.g., NanoShield Edition).
-- Ensures the Morpheus YARA rule database remains current and ready for analysis.
-
 """
 
 import setup

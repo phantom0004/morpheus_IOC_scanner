@@ -3,13 +3,16 @@ YARA Rules Detection Module
 Author: Phantom0004 (Daryl Gatt)
 
 Description:
-This module is designed to detect patterns in files using YARA rules. 
-It will be integrated with the Morpheus project for comprehensive file scanning and analysis.
+This module detects patterns in files using YARA rules, providing core functionality for 
+compiling and applying YARA rules as part of the Morpheus project.
+
+Features:
+- Compiles and applies YARA rules to files.
+- Supports various scan types, including malware detection and general file analysis.
 
 Usage:
-This module provides base functionality for compiling and applying YARA rules to files, 
-and will support different scan types, including malware and general file analysis.
-
+- Use this module to scan files for patterns using custom or predefined YARA rules.
+- Integrate with broader workflows for comprehensive file scanning and analysis.
 """
 
 import os

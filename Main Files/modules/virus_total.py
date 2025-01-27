@@ -3,18 +3,20 @@ VirusTotal API Integration
 Author: Phantom0004 (Daryl Gatt)
 
 Description:
-This module handles the integration with VirusTotal's API for analyzing files and URLs. 
-It enables automated retrieval of threat intelligence, including file hashes, URL reputations, 
-crowdsourced YARA rules, and threat classifications. The module provides detailed insight into 
-malicious attributes and behaviors identified by VirusTotal, complementing existing malware detection frameworks.
+This module integrates with VirusTotal's API to analyze files and URLs, retrieving 
+threat intelligence such as file hashes, URL reputations, crowdsourced YARA rules, 
+and threat classifications. It complements existing malware detection frameworks 
+by providing detailed insights into malicious attributes and behaviors.
+
+Features:
+- Analyze files and URLs for malicious indicators.
+- Retrieve crowdsourced intelligence, including YARA rules and threat mappings.
+- Classify threats using popular labels and categories.
+- Parse and display detailed analysis results.
 
 Usage:
-This module facilitates interaction with VirusTotal's API to:
-- Analyze files and URLs for malicious indicators.
-- Retrieve crowdsourced intelligence, including YARA rules and MITRE ATT&CK mappings.
-- Classify threats based on popular threat labels and categories.
-- Parse and display detailed analysis results in an easy-to-understand format.
-
+- Use this module to interact with VirusTotal's API for threat analysis.
+- Retrieve and display insights to enhance malware detection workflows.
 """
 
 try:

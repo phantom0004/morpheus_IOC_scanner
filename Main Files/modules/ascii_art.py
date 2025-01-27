@@ -1,3 +1,23 @@
+"""
+Morpheus ASCII Art Banners
+Author: Phantom0004 (Daryl Gatt)
+
+Description:
+This script provides customizable ASCII art banners for various modules and components of the Morpheus malware analysis framework. 
+Each function returns an ASCII banner tailored to its respective module, enhancing the visual aesthetics and user experience.
+
+Features:
+- Main Program Banner: Displays the primary Morpheus domain banner with a thematic design.
+- Scanner Banner: ASCII art highlighting the scanning functionality.
+- VirusTotal Banner: Dedicated banner for VirusTotal integration.
+- Setup Script Banner: Unique banner for the setup process.
+- Updater Banner: Customizable ASCII banner for the database updater, accepting dynamic text.
+
+Usage:
+- Call the appropriate banner function (e.g., `morpheus_banner()`) to retrieve the ASCII art as a string.
+- Use the returned string for display within the respective module or script.
+"""
+
 ####################################
 # ASCII Art for morpheus_scanner.py
 ####################################

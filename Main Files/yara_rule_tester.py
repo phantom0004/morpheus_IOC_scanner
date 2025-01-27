@@ -1,5 +1,25 @@
-# Designed to test your YARA scripts before improting to Morpheus
-# This ensures your rules work BEFORE running the program
+"""
+Morpheus YARA Scanner
+Author: Phantom0004 (Daryl Gatt)
+
+Description:
+This script provides functionality for scanning files and processes using YARA rules. 
+It includes features for validating inputs, compiling YARA rules, handling exceptions, 
+and processing match results for detailed output. The script supports scanning of file paths or process IDs (PIDs) 
+and outputs matches with associated metadata for further analysis.
+
+Features:
+- YARA Compilation: Compiles single or multiple YARA rules.
+- Process and File Scanning: Identifies matches for file paths or PIDs.
+- Match Details: Outputs detailed metadata, tags, and rule strings for matches.
+- Validation: Ensures input paths or PIDs are valid before scanning.
+- Exception Handling: Handles YARA-specific and general exceptions gracefully.
+
+Usage:
+- Provide a folder or file path containing YARA rules for compilation.
+- Enter a file path or PID to scan using the compiled rules.
+- View detailed match results, including rule metadata, tags, and matched strings.
+"""
 
 import yara
 import os

@@ -3,18 +3,19 @@ PDF Report Generation for Malware Analysis
 Author: Phantom0004 (Daryl Gatt)
 
 Description:
-This module provides functionality for generating structured PDF reports based on malware analysis results. 
-Leveraging the `reportlab` library, it enables the creation of visually organized reports, including custom headers, 
-metadata, and detailed content sections. It is specifically designed to present YARA rule matches and other analysis data 
-in a professional format.
+This module generates structured PDF reports for malware analysis results. Using the `reportlab` library, 
+it creates professional and visually organized reports, including YARA rule matches, metadata, and detailed 
+content sections.
+
+Features:
+- Automated PDF creation with timestamps and unique filenames.
+- Custom logos and dynamic content for branding.
+- Structured presentation of YARA match results and metadata.
+- Multi-page output for large datasets, ensuring readability.
 
 Usage:
-This module facilitates:
-- Automated PDF creation with timestamps and unique filenames.
-- Integration of custom logos and dynamic content for branding and reporting.
-- Organized presentation of YARA match results, including metadata and structured details.
-- Compatibility with multi-page output for large datasets, ensuring readability and completeness.
-
+- Use this module to generate detailed PDF reports based on analysis results.
+- Customize headers, logos, and content for professional reporting.
 """
 
 # PDF Libraries

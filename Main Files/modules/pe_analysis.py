@@ -3,13 +3,15 @@ PE Analysis Logic
 Author: Phantom0004 (Daryl Gatt)
 
 Description:
-This section handles the analysis of Portable Executable (PE) files using a dedicated PE analysis library. 
-It provides more precise and detailed inspection of PE structures, making it more suitable than YARA for in-depth PE analysis.
+Handles detailed analysis of Portable Executable (PE) files using a dedicated PE analysis library, 
+providing deeper insights than YARA pattern matching.
+
+Features:
+- Extracts headers, sections, imports, and other PE attributes.
+- Complements YARA with in-depth structural analysis.
 
 Usage:
-This logic focuses on extracting detailed information from PE files, including headers, sections, imports, and other attributes, 
-to complement or go beyond what YARA pattern matching can achieve.
-
+- Analyzes PE files for detailed inspection of their structure and attributes.
 """
 
 import pefile

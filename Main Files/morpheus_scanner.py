@@ -1,18 +1,21 @@
 """
-Morpheus V2 - Main Program File
+Morpheus V2 - Main Program
 Author: Phantom0004 (Daryl Gatt)
 
 Description:
-This is the core file for the Morpheus malware analysis framework. It integrates modules for PE file analysis, 
-YARA rule-based scanning, and VirusTotal API interaction to provide a comprehensive malware detection and reporting solution. 
-The program is designed to streamline threat detection workflows with a user-friendly interface and detailed reporting.
+Core file of the Morpheus malware analysis framework, integrating PE analysis, 
+YARA scanning, and VirusTotal API for comprehensive malware detection and reporting.
 
 Features:
-- **VirusTotal Integration**: Submit files, hashes, or URLs for deep scans using VirusTotal's API.
-- **YARA-Based Scanning**: Analyze files with custom or default YARA rules for malware patterns.
-- **Portable Executable (PE) Analysis**: Inspect PE structures for suspicious sections, APIs, and entropy anomalies.
-- **PDF Reporting**: Generate detailed scan reports in PDF format for documentation and auditing.
-- **AI Verdict**: Generate a detailed final verdict based using AI.
+- VirusTotal API: Submit files, hashes, or URLs for deep scans.
+- YARA Scanning: Detect malware using custom or default rules.
+- PE Analysis: Inspect files for anomalies like suspicious APIs or high entropy.
+- PDF Reporting: Generate detailed reports for auditing.
+- AI Verdict: Provide a final verdict using AI insights.
+
+Usage:
+- Use this core program to perform malware analysis using integrated features.
+- Provide input files or hashes to analyze and generate detailed reports.
 """
 
 import os
