@@ -15,10 +15,10 @@ Features:
 - **AI Verdict**: Generate a detailed final verdict based using AI.
 """
 
-import time
 import os
-import datetime
-import requests
+from time import sleep
+from datetime import datetime
+from requests import post
 
 try:
     from termcolor import colored
@@ -54,7 +54,7 @@ Please choose an option:
 # Redirects user to another menu based on choice
 def menu_switch(choice):
     print(f"Redirecting you to choice {choice} ...")
-    time.sleep(1)
+    sleep(1)
     
     os.system("cls") if os.name == "nt" else os.system("clear")
     if choice == "1":
@@ -178,7 +178,7 @@ def ai_IOC_verdict(content):
 
     # Send POST request
     try:
-        response = requests.post("https://text.pollinations.ai/", headers={"Content-Type": "application/json"}, json=payload)
+        response = post("https://text.pollinations.ai/", headers={"Content-Type": "application/json"}, json=payload)
     except:
         return "[-] MORPHEUS_IQ is Currently Unavaliable - Please try again later.", "fail"
     
@@ -263,7 +263,7 @@ def default_yara_scan():
         yara_base_instance = yara_analysis.BaseDetection(file_path, scan_type)
         
         # For time analysis
-        time_snapshot = (datetime.datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
+        time_snapshot = (datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
         
         # Setup Other Classes that will handle the output
         if scan_type == "file_analysis":

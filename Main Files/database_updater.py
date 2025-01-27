@@ -27,30 +27,12 @@ This updater script:
 
 import setup
 import os
-import shutil
 import sys
-import datetime
 import re
+from shutil import rmtree
+from datetime import datetime
 from termcolor import colored
-
-def display_banner():
-    text = colored("MORPHEUS UPDATER", 'red')
-    
-    banner = rf"""
-        ,     \    /      ,        
-       / \    )\__/(     / \       
-      /   \  (_\  /_)   /   \      
- ____/_____\__\@  @/___/_____\____ 
-|             |\../|              |
-|              \VV/               |
-|         {text}        |
-|_________________________________|
- |    /\ /      \\       \ /\    | 
- |  /   V        ))       V   \  | 
- |/     `       //        '     \| 
- `              V                '
-    """
-    print(banner)
+from modules import ascii_art
     
 def check_default_rules():
     if os.path.exists(os.path.join("yara_rules", "external_yara_rules", "default_built_in_rules")):
@@ -114,7 +96,7 @@ def check_requirements():
 def update_repository(repo_name, repository_link_and_names):  
     # Delete old folder
     try:  
-        shutil.rmtree(repo_name)
+        rmtree(repo_name)
     except FileNotFoundError:
         print(f"[-] Unable to delete {repo_name}! File is not found ... Skipping!")
         return False
@@ -169,10 +151,10 @@ with open("repo_versions.txt" ,"r") as file:
 if not file_contents:
     sys.exit("[-] File 'repo_versions.txt' is empty! Please use 'setup.py' to populate this file.")
 
-display_banner()
+print(ascii_art.updater_banner(colored("MORPHEUS UPDATER", 'red')))
 
 # Print update message with current time and date
-print(colored(f"Database Update Initiated On: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n", attrs=['bold']))
+print(colored(f"Database Update Initiated On: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n", attrs=['bold']))
 
 # Extract GitHub links based on installation type
 installation_type = file_contents.split(":")[1].splitlines()[0].strip()
