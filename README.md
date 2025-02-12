@@ -1,10 +1,45 @@
-# Morpheus IOC Scanner | Detect and Defend Before the Threat Begins
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/868cbf26-a411-4d1a-98ee-7003b5496d8f" alt="Screenshot" style="width: 80%; height: auto;">
+<h1 align="center" style="font-weight:700; font-size:2.4em; margin-bottom:0;">
+  ⚔️ <span style="color:#6f42c1;">Morpheus IOC Scanner</span> ⚔️
+</h1>
+<p align="center" style="margin-top:5px; font-style: italic;">
+  Detect and Defend Before the Threat Begins
 </p>
 
-Introducing **Morpheus IOC Scanner** — a reliable and advanced tool for detecting and analyzing potentially malicious files, including ransomware and Indicators of Compromise (IOCs). Designed with precision, Morpheus leverages custom-built rules alongside enterprise-grade YARA integrations to extract detailed file insights and identify complex malware threats. Built to support enterprise-grade detection, it provides robust analysis capabilities to help you stay ahead of cyber threats with confidence.
+<p align="center">
+  <!-- Project Logo -->
+  <img
+    src="https://github.com/user-attachments/assets/868cbf26-a411-4d1a-98ee-7003b5496d8f"
+    alt="Morpheus IOC Scanner Logo"
+    style="
+      width: 40%;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    "
+  />
+</p>
+
+<p align="center">
+  <!-- Badges -->
+  <a href="https://github.com/phantom0004/morpheus_IOC_scanner/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/phantom0004/morpheus_IOC_scanner" alt="GitHub License" />
+  </a>
+  <a href="https://github.com/phantom0004/morpheus_IOC_scanner/issues" style="margin-left: 10px;">
+    <img src="https://img.shields.io/github/issues/phantom0004/morpheus_IOC_scanner" alt="GitHub Issues" />
+  </a>
+  <a href="https://github.com/phantom0004/morpheus_IOC_scanner/stargazers" style="margin-left: 10px;">
+    <img src="https://img.shields.io/github/stars/phantom0004/morpheus_IOC_scanner?style=social" alt="GitHub Stars" />
+  </a>
+  <a href="https://github.com/phantom0004/morpheus_IOC_scanner/commits/main" style="margin-left: 10px;">
+    <img src="https://img.shields.io/github/last-commit/phantom0004/morpheus_IOC_scanner" alt="GitHub Last Commit" />
+  </a>
+</p>
+
+---
+
+**Introducing Morpheus IOC Scanner**—a cutting-edge solution for detecting and analyzing malicious files, including ransomware and Indicators of Compromise (IOCs). Built with meticulous precision, Morpheus fuses custom-built rules and enterprise-grade YARA integrations, enabling comprehensive file insights and robust threat detection. Engineered for modern cybersecurity challenges, Morpheus helps you stay ahead of emerging threats with confidence.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b0cca872-2f6f-4a30-8046-3fd2b5870f9b" alt="Dragon Image" style="width: 30%; height: auto;">

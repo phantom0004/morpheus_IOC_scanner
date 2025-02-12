@@ -5,3 +5,4 @@ termcolor
 reportlab
 requests
 rich
+psutil
