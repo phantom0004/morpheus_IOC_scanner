@@ -21,16 +21,15 @@ Usage:
 
 try:
     import vt
+    import requests
     from termcolor import colored
 except ModuleNotFoundError:
     exit(f"'virus_total.py' Library Error -> Please install all requirements via the 'requirements.txt' file with PIP")
 
-import hashlib
-import requests 
+from urllib.parse import urlparse, quote
+import hashlib 
 import json
 import os
-import urllib.parse
-from urllib.parse import urlparse
 
 class VirusTotalAPI:
     def __init__ (self, choice="1", data="placeholder", API_KEY="", client_obj=""):
@@ -368,7 +367,7 @@ class VirusTotalAPI:
 
     # Rescan URL if any fail arises
     def rescan_url(self):
-        data = urllib.parse.quote(self.data, safe='')
+        data = quote(self.data, safe='')
         
         # May not always work, but if it does, a re-scan will be submitted
         self.send_api_request_using_requests(f"urls/{data}/analyse")

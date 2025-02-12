@@ -11,7 +11,7 @@
 rule ___test_Screen {
    meta:
       description = "test - file Screen.exe"
-      author = "yarGen Rule Generator"
+      author = "yarGen Rule Generator Morpheus"
       reference = "https://github.com/Neo23x0/yarGen"
       date = "2024-11-11"
       hash1 = "13b3f0d3653559b2992dd717e86dcc0c82efa750b6585687e45972a434d920df"

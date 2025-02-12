@@ -4,3 +4,4 @@ vt-py
 termcolor
 reportlab
 requests
+rich

@@ -11,7 +11,7 @@
 rule ___test_KRYPT0S {
    meta:
       description = "test - file KRYPT0S.exe"
-      author = "yarGen Rule Generator"
+      author = "yarGen Rule Generator Morpheus"
       reference = "https://github.com/Neo23x0/yarGen"
       date = "2024-11-11"
       hash1 = "3e0eac0a16103c7fc978d049f085bd84cb32702dd79d762784d82d97f89618e7"

@@ -16,18 +16,11 @@ Usage:
 """
 
 import os
+import yara
 import concurrent.futures
 import threading
 from typing import Union, List
-try:
-    import yara
-    from termcolor import colored
-except Exception as err:
-    if "libyara" in str(err):
-        print("\nLibyara not found in your 'Yara' installation. Please try uninstall all python dependencies and re-install them.")
-        exit("\nIf all else fails, open an issue on Morpheus with your details.")
-    else:
-        exit(f"'yara_analysis.py' Library Error -> Error on Import : {err}")
+from termcolor import colored
 
 # Parent class which handles the core of this file
 class BaseDetection:
@@ -124,17 +117,12 @@ class BaseDetection:
     def output_yara_matches(yara_match:yara.Match) -> None:
         if yara_match:
             for match in yara_match:
-                # Required Variables
                 tags = f"Matched Tags: {str(match.tags)}" if match.tags else ""
                 metadata = f"Rule Description: {str(match.meta['description'])}" if match.meta["description"] else ""
                 print(' ' * 80, end='\r')  # Clears reminants from the dynamic printing            
-                
-                if "KRYPTOS" in str(match): 
-                    # Detect for KRYPTOS ransomware  
-                    print(f'[+] KRYPTOS RANSOMWARE DETECTED: {colored(str(match), attrs=["bold"])}')
-                else:
-                    # Detect for any other malware
-                    print(f"[+] Matched Rule: '{colored(str(match), 'green', attrs=['bold'])}'"+"  "+tags)
+            
+                # Detect for any other malware
+                print(f"[+] Matched Rule: '{colored(str(match), 'green', attrs=['bold'])}'"+"  "+tags)
                     
                 # Metadata Matches
                 print(colored(metadata.capitalize(), "yellow"))

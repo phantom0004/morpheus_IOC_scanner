@@ -21,7 +21,6 @@ Usage:
 import os
 from time import sleep
 from datetime import datetime
-from requests import post
 from zipfile import ZipFile 
 
 try:
@@ -32,10 +31,11 @@ try:
     from modules import pe_analysis
     from modules import virus_total
     from modules import yara_analysis
-    from modules import AnalysisReportPDF
+    from modules import analysis_report
+    from modules import ai_verdict
     from modules import ascii_art
 except ModuleNotFoundError:
-    exit("Custom modules not found. Please ensure you have the 'yara_rules.py', 'pe_analysis.py', 'virus_total.py' and 'AnalysisReportPDF.py'!")
+    exit("Custom modules not found. Please ensure you have all necessary Morpheus modules!")
 
 DEFAULT_RULE_PATH = os.path.join("yara_rules", "external_yara_rules", "default_built_in_rules")
 
@@ -51,9 +51,6 @@ Please choose an option:
 
 [2] Default Scan (YARA - Offline)
     - Perform a standard scan using YARA rules and Pefile for quick threat detection.
-    
-[3] Display API Key Help Menu
-    - Display a help menu showing how to sign up for an API key in a few easy steps.
 """
     print(banner+options)
 
@@ -144,56 +141,6 @@ def hash_file(path, hash_algo="sha256"):
     
     return virus_total_object.hash_file(file_data, hash_algo)
 
-# Use a pre-trained model for a final verdict based on Malware signatures 
-def ai_IOC_verdict(content):
-    structured_content = {
-        "File Analysis Output" : [],
-        "Malware Analysis Output" : []    
-    }
-    
-    # Create a custom dictionary to feed to AI
-    for key, matches in content.items():
-        for match in matches:
-            structured_content[key].append(f"Match Name : {match} - Match Strings : {match.strings if match.strings else 'None Found'}")
-    
-    # Payload
-    payload = {
-        # Setup AI
-        "messages": [
-            # Define the personality
-            {
-                "role": "system",
-                "content": (
-                    "You are 'MORPHEUS_IQ', an advanced cybersecurity expert in malware analysis."
-                    "Provide precise and actionable insights from IoCs and signature findings."
-                    "Avoid speculation, repetition, or hallucinations.  Avoid JSON or structured formats and Markdown."
-                    "Format responses as clear text with short paragraphs separated by line breaks, suitable for terminal display."
-                )
-            },
-            {
-                "role": "user",
-                "content": (
-                    "Analyze the provided scan results and deliver concise, actionable insights based on matched YARA signatures."
-                    f"\nScan Output: {str(structured_content)}"
-                )
-            }
-        ],
-        "model": "EleutherAI/gpt-neo-1.3B",
-        "seed": 42
-    }
-
-    # Send POST request
-    try:
-        response = post("https://text.pollinations.ai/", headers={"Content-Type": "application/json"}, json=payload)
-    except:
-        return "[-] MORPHEUS_IQ is Currently Unavaliable - Please try again later.", "fail"
-    
-    # Handle response
-    if response.status_code == 200:
-        return response.text, "success"
-    else:
-        return "[-] MORPHEUS_IQ is Currently Unavaliable - Please try again later.", "fail"
-
 # Parse hash of file    
 def parse_hash_output(output):
     message = None
@@ -207,25 +154,6 @@ def parse_hash_output(output):
 
     if message: exit(message)
     
-# Display virus total help menu
-def display_API_help():
-    print("""
-VirusTotal scans files/URLs for threats using multiple antivirus engines. Automate scans via their API.
-
-- Get an API Key:
-1. Sign up: https://www.virustotal.com/gui/join-us
-2. Go to your profile: https://www.virustotal.com/gui/my-apikey
-3. Copy your API key.
-
-- Need Help?
-More info: https://virustotal.readme.io/docs/please-give-me-an-api-key
-
-- Resources:
-1. Quota: https://virustotal.readme.io/docs/consumption-quotas-handled
-2. Public vs Private API: https://virustotal.readme.io/docs/difference-public-private
-3. API Overview: https://virustotal.readme.io/docs
-    """)
-
 # Load user selected file
 def load_file(user_path):
     if not os.path.exists(user_path.strip()):
@@ -238,23 +166,7 @@ def load_file(user_path):
     return file_contents
 
 # Yara scan
-def default_yara_scan():
-    if not os.path.exists(os.path.join(os.getcwd(), "yara_rules", "external_yara_rules")):
-        exit(colored("[-] Missing Yara Database, Setup.py has not been ran yet! Please run the script before running Morpheus.", "red"))
-    elif os.path.exists(DEFAULT_RULE_PATH):
-        print(colored("[!] Using Default Yara Rules. Results may be limited - Consider running 'setup.py'. \n", "yellow"))
-    
-    # Handle file data
-    try:
-        file_path = input("Enter the path of the file to scan > ").replace('"', '').strip()
-        if not os.path.exists(file_path):
-            exit(colored("[-] The file defined does not exist! Please ensure the path is correct. Aborting.", "red"))
-    except KeyboardInterrupt:
-        exit("\n[!] User Interrupt. Program Exited Successfully")
-    
-    # Handle PDF Arguments
-    pdf_flag = input("Would you like to compile the output into a PDF after program completion? (y/n) > ").strip().lower() or "n"
-    
+def default_yara_scan(file_path, pdf_flag):    
     # Styling
     print("_"*int(37+len(file_path)))
     print("\n")
@@ -288,46 +200,80 @@ def default_yara_scan():
     converted_output = format_yara_output(yara_matches)
     
     if pdf_flag == "y":
-        print(colored("\n\n[!] Converting Output to PDF Format ...", attrs=["bold"]))
-        pdf_base_instance = AnalysisReportPDF.ReportOutput(converted_output)
-        
-        # Create PDF and check for errors
-        creation_result = pdf_base_instance.pdf_main_content()
-        
-        if isinstance(creation_result, str) and "Error" in creation_result:
-            print(colored(f"[-] Skipped PDF Creation Due to Error - {creation_result}", "red"))
-        else:
-            print(colored("[+] Output Converted to a PDF Document - Document Found in 'Main Files' Directory", "green"))
+        generate_pdf_report(converted_output)
     
     # Get AI Verdict
     print("\n")
-    custom_message("AI verdict", "(AI-generated: Verify independently)")
-    handle_ai_output(converted_output)
+    custom_message("AI verdict", "(Verify independently)")
+    verdict_error_output = generate_ai_verdict(converted_output)
+    
+    if verdict_error_output:
+        print(colored(verdict_error_output, "red", attrs=["bold"]))    
 
-# Handle output of AI response
-def handle_ai_output(converted_output):
-    print(colored("[!] Gathering AI Response Based on Analysis ...", "yellow", attrs=["bold"]))
-    result, status_code = ai_IOC_verdict(converted_output)
+def handle_yara_scan_arguments():
+    if not os.path.exists(os.path.join(os.getcwd(), "yara_rules", "external_yara_rules")):
+        exit(colored("[-] Missing Yara Database, Setup.py has not been ran yet! Please run the script before running Morpheus.", "red"))
+    elif os.path.exists(DEFAULT_RULE_PATH):
+        print(colored("[!] Using Default Yara Rules. Results may be limited - Consider running 'setup.py'. \n", "yellow"))
+    
+    # Handle file data
+    try:
+        file_path = input("Enter the path of the file to scan > ").replace('"', '').strip()
+        if not os.path.exists(file_path):
+            exit(colored("[-] The file defined does not exist! Please ensure the path is correct. Aborting.", "red"))
+    except KeyboardInterrupt:
+        exit("\n[!] User Interrupt. Program Exited Successfully")
+    
+    # Handle PDF Arguments
+    pdf_flag = input("Would you like to compile the output into a PDF after program completion? (y/n) > ").strip().lower() or "n"
+    
+    return file_path, pdf_flag
 
-    if status_code == "success":
-        result = result.strip().replace("```", "") # Remove new lines and remove markdown elements (if any)
-        print(f"[{colored('+', 'green')}] Analysis Result:\n{colored(result, attrs=['bold'])}")
+# Send API request and return AI verdict with status message
+def generate_ai_verdict(yara_match_results):
+    # Store Unstructured YARA rules in ai_verdict object
+    ai_verdict_object = ai_verdict.AIVerdict(yara_match_results)
+    
+    # Generate API Request Template in JSON Format
+    json_payload = ai_verdict_object.generate_api_request()
+
+    # Send API Request and store the output and fail/success message
+    request_output, request_status = ai_verdict_object.send_api_request(json_payload) 
+    
+    if request_status == "fail":
+        return request_output
+    
+    # Parse the API Response in proper format
+    if ai_verdict_object.supports_advanced_formatting():
+        ai_verdict_object.format_string_to_markdown(request_output)
     else:
-        print(colored(result, "red"))
+        print(request_output.strip().replace("```", "").replace("**", ""))
 
-# Will convert the list to a dictionary
-def format_yara_output(output_yara_list):
+def generate_pdf_report(yara_results):
+    pdf_base_instance = analysis_report.ReportOutput(yara_results)
+        
+    # Create PDF and check for errors
+    creation_result = pdf_base_instance.pdf_main_content()
+        
+    if isinstance(creation_result, str) and "Error" in creation_result:
+        print(colored(f"[-] Skipped PDF Creation Due to Error - {creation_result}", "red"))
+    else:
+        print(colored("[+] Output Converted to a PDF Document - Document Found in 'Main Files' Directory", "green"))
+
+# Formats YARA output into two categories for PDF and AI processing
+def format_yara_output(yara_results):        
     converted_output = {
-        "File Analysis Output": [],
-        "Malware Analysis Output": [],
+        "General File Analysis YARA Output": [],
+        "Malware Analysis YARA Output": [],
     }
     
-    for match in output_yara_list:
-        # Use the rule attribute for comparison but append the whole object
-        if hasattr(match, 'meta') and match.meta.get("author") == "Daryl Gatt":
-            converted_output["File Analysis Output"].append(match)
+    for match in yara_results:
+        if hasattr(match, 'meta') and match.meta.get("author") in ["Morpheus", "yarGen Rule Generator Morpheus"]:
+            # YARA rules which belong to Morpheus - These are for general file analysis 
+            converted_output["General File Analysis YARA Output"].append(match)
         else:
-            converted_output["Malware Analysis Output"].append(match)
+            # These YARA rules are for malware analysis and have been sourced externally
+            converted_output["Malware Analysis YARA Output"].append(match)
     
     return converted_output
 
@@ -396,27 +342,26 @@ def extract_all_zip_contents():
             print(colored("[-] Permission Error - Unable to delete rule zipped file. Please delete manually.", "red"))
 
 # Handle menu user option
-def handle_user_arguments():
+def handle_menu_arguments():
     try:
         usr_input = input("Choice > ")
         if usr_input in ["1", "2"]: menu_switch(usr_input)
     except KeyboardInterrupt:
         exit("\n[!] User Interrupt. Program Exited Successfully")
-    if not usr_input or usr_input not in ["1", "2", "3"]:
-        exit(colored("[-] Invalid Choice Input - Please ensure your input is in the range of 1-3!", "red"))
         
     if usr_input == "1":
         virus_total_scan()
     elif usr_input == "2":
-        extract_all_zip_contents()
-        default_yara_scan()
-    elif usr_input == "3":
-        display_API_help()
+        extract_all_zip_contents() # Extracts zipped YARA rules
+        scan_file_path, pdf_flag = handle_yara_scan_arguments()
+        default_yara_scan(scan_file_path, pdf_flag)
+    else:
+        exit(colored("[-] Invalid Choice Input - Please ensure your input is in the range of 1-2", "red"))
 
 # Main function
 def main():
     startup_banner()
-    handle_user_arguments()
+    handle_menu_arguments()
 
 if __name__ == "__main__":
     main()
